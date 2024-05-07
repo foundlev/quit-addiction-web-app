@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@700&display=swap');
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Google Sans', sans-serif;
+    background-color: white;
+}
+
+.container {
+    color: #4169E1;
+    padding: 20px;
+    font-size: 46px;
+}
+
+
+#settingsButton, #resetButton {
+    position: absolute;
+    top: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#settingsButton img, #resetButton img {
+    width: 50px;
+    height: 50px;
+}
+
+#settingsButton {
+    right: 100px; /* Смещение на 100px от правого края */
+}
+
+#resetButton {
+    right: 20px; /* Ближе к правому краю */
+}
+
+.medal-container {
+    position: absolute; /* Абсолютное позиционирование для точного контроля расположения */
+    top: 20px; /* Отступ сверху */
+    left: 20px; /* Отступ слева */
+    display: flex; /* Используем flexbox для горизонтального расположения элементов */
+    align-items: center; /* Выравниваем элементы по центру по вертикали */
+    gap: 5px; /* Расстояние между медалями */
+}
+
+.medal {
+    display: none;
+    width: 50px; /* Ширина медали */
+    height: auto; /* Высота медали будет регулироваться автоматически */
+    transition: transform 0.3s ease; /* Плавное изменение при наведении */
+}
+
+.medal:hover {
+    transform: scale(1.1); /* Увеличиваем медаль при наведении */
+}
+
+
+.quote-container {
+    width: 100%;
+    max-width: 350px; /* Максимальная ширина для цитаты */
+    text-align: center;
+    margin: 20px auto; /* Автоматическое выравнивание по горизонтали и вертикали */
+    font-size: 20px;
+    color: #666; /* Более темный и менее насыщенный цвет шрифта */
+    padding: 10px; /* Отступы вокруг текста внутри бокса */
+    background-color: #f0f0f0; /* Светло-серый фон */
+    border-radius: 8px; /* Скругленные углы для бокса */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Небольшая тень для эффекта "всплывающего" элемента */
+    quotes: "“" "”" "‘" "’"; /* Определение стилей кавычек */
+    font-style: normal; /* Убираем курсив */
+}
+
+.quote-container:before {
+    content: open-quote; /* Открытие кавычки */
+}
+
+.quote-container:after {
+    content: close-quote; /* Закрытие кавычки */
+}
+
+
+
+.button-and-timer-container {
+    text-align: center;
+    width: auto;
+}
+
+
+.progress-container {
+    display: block;
+    position: relative;
+    width: 270px; /* Фиксированная ширина прогресс-бара */
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin: 10px auto; /* Автоматическое выравнивание по горизонтали */
+    margin-top: -25px;
+    overflow: hidden;
+    height: 30px; /* Высота контейнера */
+}
+
+#progress-bar {
+    position: absolute; /* Задаем абсолютное позиционирование для правильной работы */
+    top: 0; /* Размещаем наполнитель в верхней части контейнера */
+    left: 0; /* Размещаем наполнитель в левой части контейнера */
+    background-color: #4169E1;
+    width: 0%; /* Начальная ширина, управляется через JavaScript */
+    height: 100%; /* Высота наполнителя соответствует высоте контейнера */
+    border-radius: 10px; /* Скругление углов для наполнителя */
+}
+
+
+#percentage {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: white;
+    font-size: 16px;
+}
