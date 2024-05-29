@@ -84,8 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('startTime', startTime);
     }
     updateTimer(startTime);
-<<<<<<< HEAD
-=======
 
     // Переключение изображений медалей и кнопок в зависимости от текущей темы
     const medals = document.querySelectorAll('.medal'); // Выбираем все элементы с классом 'medal'
@@ -108,5 +106,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     mediaQuery.addListener(updateImages); // Добавляем слушатель изменений темы
     updateImages(mediaQuery); // Вызываем функцию для первоначальной установки изображений в зависимости от текущей темы
->>>>>>> 85cc0cd (Dark theme)
 });
