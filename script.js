@@ -104,6 +104,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const updateTheme = (e) => {
+        if (e.matches) {
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1e1e1e');
+        } else {
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff');
+        }
+    };
+
     mediaQuery.addListener(updateImages); // Добавляем слушатель изменений темы
+    mediaQuery.addListener(updateTheme);
     updateImages(mediaQuery); // Вызываем функцию для первоначальной установки изображений в зависимости от текущей темы
+    updateTheme(mediaQuery);
 });
