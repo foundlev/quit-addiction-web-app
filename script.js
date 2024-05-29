@@ -84,4 +84,29 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('startTime', startTime);
     }
     updateTimer(startTime);
+<<<<<<< HEAD
+=======
+
+    // Переключение изображений медалей и кнопок в зависимости от текущей темы
+    const medals = document.querySelectorAll('.medal'); // Выбираем все элементы с классом 'medal'
+    const buttons = document.querySelectorAll('#settingsButton img, #resetButton img'); // Выбираем все изображения кнопок
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)'); // Создаем объект MediaQueryList для отслеживания изменения темы
+
+    function updateImages(e) {
+        // Функция для обновления изображений
+        medals.forEach(medal => {
+            // Для каждого элемента 'medal'
+            medal.src = e.matches ? medal.getAttribute('data-dark') : medal.getAttribute('data-light');
+            // Устанавливаем атрибут 'src' в зависимости от текущей темы: 'data-dark' для темной темы и 'data-light' для светлой
+        });
+        buttons.forEach(button => {
+            // Для каждого изображения кнопок
+            button.src = e.matches ? button.getAttribute('data-dark') : button.getAttribute('data-light');
+            // Устанавливаем атрибут 'src' в зависимости от текущей темы: 'data-dark' для темной темы и 'data-light' для светлой
+        });
+    }
+
+    mediaQuery.addListener(updateImages); // Добавляем слушатель изменений темы
+    updateImages(mediaQuery); // Вызываем функцию для первоначальной установки изображений в зависимости от текущей темы
+>>>>>>> 85cc0cd (Dark theme)
 });

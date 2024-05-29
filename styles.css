@@ -9,6 +9,10 @@ body, html {
     align-items: center;
     font-family: 'Google Sans', sans-serif;
     background-color: white;
+<<<<<<< HEAD
+=======
+    color: #4169E1;
+>>>>>>> 85cc0cd (Dark theme)
 }
 
 .container {
@@ -17,7 +21,10 @@ body, html {
     font-size: 46px;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 85cc0cd (Dark theme)
 #settingsButton, #resetButton {
     position: absolute;
     top: 20px;
@@ -33,6 +40,7 @@ body, html {
 }
 
 #settingsButton {
+<<<<<<< HEAD
     right: 100px; /* Смещение на 100px от правого края */
 }
 
@@ -47,10 +55,27 @@ body, html {
     display: flex; /* Используем flexbox для горизонтального расположения элементов */
     align-items: center; /* Выравниваем элементы по центру по вертикали */
     gap: 5px; /* Расстояние между медалями */
+=======
+    right: 100px;
+}
+
+#resetButton {
+    right: 20px;
+}
+
+.medal-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+>>>>>>> 85cc0cd (Dark theme)
 }
 
 .medal {
     display: none;
+<<<<<<< HEAD
     width: 50px; /* Ширина медали */
     height: auto; /* Высота медали будет регулироваться автоматически */
     transition: transform 0.3s ease; /* Плавное изменение при наведении */
@@ -86,11 +111,46 @@ body, html {
 
 
 
+=======
+    width: 50px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.medal:hover {
+    transform: scale(1.1);
+}
+
+.quote-container {
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    margin: 20px auto;
+    font-size: 20px;
+    color: #666;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    quotes: "“" "”" "‘" "’";
+    font-style: normal;
+}
+
+.quote-container:before {
+    content: open-quote;
+}
+
+.quote-container:after {
+    content: close-quote;
+}
+
+>>>>>>> 85cc0cd (Dark theme)
 .button-and-timer-container {
     text-align: center;
     width: auto;
 }
 
+<<<<<<< HEAD
 
 .progress-container {
     display: block;
@@ -115,6 +175,30 @@ body, html {
 }
 
 
+=======
+.progress-container {
+    display: block;
+    position: relative;
+    width: 270px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin: 10px auto;
+    margin-top: -25px;
+    overflow: hidden;
+    height: 30px;
+}
+
+#progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #4169E1;
+    width: 0%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+>>>>>>> 85cc0cd (Dark theme)
 #percentage {
     position: absolute;
     right: 10px;
@@ -122,3 +206,40 @@ body, html {
     color: white;
     font-size: 16px;
 }
+<<<<<<< HEAD
+=======
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) {
+    body, html {
+        background-color: #1e1e1e;
+        color: #E1E1E1;
+    }
+
+    .quote-container {
+        background-color: #333;
+        color: #E1E1E1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .progress-container {
+        background-color: #444;
+    }
+
+    #progress-bar {
+        background-color: #BB86FC; /* Bright purple color */
+    }
+
+    #percentage {
+        color: #BB86FC; /* Bright purple color for timer text */
+    }
+
+    .quote-container, .container, img {
+        filter: brightness(0.9);
+    }
+
+    .container {
+        color: #BB86FC; /* Bright purple color for timer text */
+    }
+}
+>>>>>>> 85cc0cd (Dark theme)
