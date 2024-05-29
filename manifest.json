@@ -1,7 +1,7 @@
 {
   "name": "Quit Addiction App",
   "short_name": "Quit App",
-  "start_url": "/index.html",
+  "start_url": "/quit-addiction-web-app/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4169E1",
