@@ -61,10 +61,11 @@ body, html {
 }
 
 .quote-container {
+    margin-top: -100px; /* Adjust this value as needed */
+    margin-bottom: 20px; /* Adjust this value as needed */
     width: 100%;
     max-width: 350px;
     text-align: center;
-    margin: 20px auto;
     font-size: 20px;
     color: #666;
     padding: 10px;
@@ -73,6 +74,10 @@ body, html {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     quotes: "“" "”" "‘" "’";
     font-style: normal;
+}
+
+.container {
+    margin-top: -40px; /* Adjust this value as needed */
 }
 
 .quote-container:before {
