@@ -12,6 +12,31 @@ body, html {
     color: #4169E1;
 }
 
+/* Добавляем стили для анимации перезагрузки */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.refresh-indicator {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    color: #4169E1;
+    animation: slideDown 0.5s ease-out;
+    display: none; /* Изначально скрыт */
+}
+
+.content-container {
+    padding-top: 100px;
+}
+
 .container {
     color: #4169E1;
     padding: 20px;
@@ -123,7 +148,72 @@ body, html {
     font-size: 16px;
 }
 
+/* Новый минималистичный стиль для блока с параметрами */
+.parameters-container {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.parameter {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f9fafc;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.parameter:hover {
+    background-color: #f0f0f0;
+}
+
+.parameter-label {
+    font-weight: 600;
+    font-size: larger;
+    color: #555;
+}
+
+.parameter-value {
+    font-size: larger;
+    color: #333;
+    font-weight: 600;
+}
+
 /* Dark Theme */
+@media (prefers-color-scheme: dark) {
+    .parameters-container {
+        background-color: #1e1e1e;
+        color: #E1E1E1;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .parameter {
+        background: #2c2c2c;
+        border: 1px solid #444;
+    }
+
+    .parameter:hover {
+        background-color: #333;
+    }
+
+    .parameter-label {
+        color: #bbb;
+    }
+
+    .parameter-value {
+        color: #888;
+    }
+}
+
 @media (prefers-color-scheme: dark) {
     body, html {
         background-color: #1e1e1e;

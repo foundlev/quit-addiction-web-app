@@ -13,13 +13,13 @@
     <link rel="apple-touch-icon" href="assets/icons/quit_512.svg">
 </head>
 <body>
-    <div class="medal-container">
-        <img id="medal7" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="7 Days" class="medal">
-        <img id="medal15" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="15 Days" class="medal">
-        <img id="medal30" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="30 Days" class="medal">
-        <img id="medal60" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="60 Days" class="medal">
-        <img id="medal90" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="90 Days" class="medal">
-    </div>
+<!--    <div class="medal-container">-->
+<!--        <img id="medal7" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="7 Days" class="medal">-->
+<!--        <img id="medal15" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="15 Days" class="medal">-->
+<!--        <img id="medal30" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="30 Days" class="medal">-->
+<!--        <img id="medal60" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="60 Days" class="medal">-->
+<!--        <img id="medal90" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="90 Days" class="medal">-->
+<!--    </div>-->
     <div class="content-container">
         <div id="quoteContainer" class="quote-container">Загрузка цитаты...</div>
         <div class="button-and-timer-container">
@@ -31,6 +31,28 @@
                     <div id="progress-bar"></div>
                     <span id="percentage">-.--%</span>
                 </div>
+            </div>
+        </div>
+        <div class="parameters-container">
+            <div class="parameter">
+                <span class="parameter-label">Тревожность:</span>
+                <span id="anxiety-level" class="parameter-value">-</span>
+            </div>
+            <div class="parameter">
+                <span class="parameter-label">Социальность:</span>
+                <span id="sociality-level" class="parameter-value">-</span>
+            </div>
+            <div class="parameter">
+                <span class="parameter-label">Сон:</span>
+                <span id="sleep-quality" class="parameter-value">-</span>
+            </div>
+            <div class="parameter">
+                <span class="parameter-label">Импульсивность:</span>
+                <span id="impulsivity-level" class="parameter-value">-</span>
+            </div>
+            <div class="parameter">
+                <span class="parameter-label">Энергия:</span>
+                <span id="energy-level" class="parameter-value">-</span>
             </div>
         </div>
     </div>
