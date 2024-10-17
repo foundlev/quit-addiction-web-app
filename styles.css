@@ -102,7 +102,7 @@ body, html {
 }
 
 .container {
-    margin-top: -40px; /* Adjust this value as needed */
+    margin-top: -200px; /* Adjust this value as needed */
 }
 
 .quote-container:before {
@@ -186,6 +186,10 @@ body, html {
     font-size: larger;
     color: #333;
     font-weight: 600;
+}
+
+.hidden {
+    display: none;
 }
 
 /* Dark Theme */

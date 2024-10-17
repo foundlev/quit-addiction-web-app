@@ -52,7 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const timerElement = document.getElementById('timer');
             const percentageElement = document.getElementById('percentage');
 
-            timerElement.textContent = formatTime(elapsedTime);
+            // Вычисляем количество дней с округлением в большую сторону
+            const days = Math.ceil(elapsedTime / (1000 * 60 * 60 * 24));
+
+            timerElement.textContent = `День #${days}`;//formatTime(elapsedTime);
             progressBar.style.width = `${elapsedPercentage}%`;
             percentageElement.textContent = `${elapsedPercentage}%`;
 
