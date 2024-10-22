@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const percentageElement = document.getElementById('percentage');
 
             // Вычисляем количество дней с округлением в большую сторону
-            const days = Math.ceil(elapsedTime / (1000 * 60 * 60 * 24));
+            const days = Math.ceil(elapsedTime / (1000) % 60);
 
-            timerElement.textContent = `День #${days}`;//formatTime(elapsedTime);
+            timerElement.textContent = `Секунды: ${days}`;//formatTime(elapsedTime);
             progressBar.style.width = `${elapsedPercentage}%`;
-            percentageElement.textContent = `${elapsedPercentage}%`;
+//            percentageElement.textContent = `${elapsedPercentage}%`;
 
 //            // Отображение медалей
 //            const days = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
