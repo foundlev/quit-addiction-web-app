@@ -53,9 +53,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const percentageElement = document.getElementById('percentage');
 
             // Вычисляем количество дней с округлением в большую сторону
-            const days = Math.ceil(elapsedTime / (1000) % 60);
+            const days = elapsedTime / (1000 * 60 * 60 * 24);
 
-            timerElement.textContent = `Секунды: ${days}`;//formatTime(elapsedTime);
+            let message = '';
+            if (days < 5) {
+                message = 'Меньше 6 дней';
+            } else if (days > 15) {
+                message = 'Больше 15 дней';
+            } else {
+                message = 'Больше 6 дней';
+            }
+
+            timerElement.textContent = message;
             progressBar.style.width = `${elapsedPercentage}%`;
 //            percentageElement.textContent = `${elapsedPercentage}%`;
 
