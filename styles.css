@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@500&display=swap');
 
 body, html {
     height: 100%;
@@ -41,9 +42,10 @@ body, html {
     color: #4169E1;
     padding: 20px;
     font-size: 46px;
+    font-weight: bold;
 }
 
-#settingsButton, #resetButton {
+#settingsButton, #resetButton, #infoButton {
     position: absolute;
     top: 20px;
     background: none;
@@ -52,13 +54,17 @@ body, html {
     z-index: 1000;
 }
 
-#settingsButton img, #resetButton img {
+#settingsButton img, #resetButton img, #infoButton img {
     width: 50px;
     height: 50px;
 }
 
+#infoButton {
+    right: 140px;
+}
+
 #settingsButton {
-    right: 100px;
+    right: 80px;
 }
 
 #resetButton {
@@ -190,6 +196,184 @@ body, html {
 
 .hidden {
     display: none;
+}
+
+/* Стили для модального окна */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    color: #333;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+bold {
+    font-weight: bold;
+}
+
+#modalDescription {
+    font-weight: normal;
+    font-size: 1.3em
+}
+
+/* Адаптация для темной темы */
+@media (prefers-color-scheme: dark) {
+    .modal-content {
+        background-color: #1e1e1e;
+        color: #E1E1E1;
+    }
+    .close-button {
+        color: #E1E1E1;
+    }
+    .close-button:hover {
+        color: #fff;
+    }
+}
+
+/* Стили для кнопки "Применить" */
+.apply-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4169E1;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.apply-button:hover {
+    background-color: #365ac9;
+}
+
+/* Стили для опций штрафов */
+.penalty-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.penalty-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Обеспечение консистентности стилей модального окна */
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Адаптация для темной темы */
+@media (prefers-color-scheme: dark) {
+    .apply-button {
+        background-color: #BB86FC;
+    }
+
+    .apply-button:hover {
+        background-color: #9c6dd0;
+    }
+}
+
+/* Стили для опций штрафов */
+.penalty-option {
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: #f9fafc;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.penalty-option.selected {
+    background-color: #4169E1;
+    color: #fff;
+    border-color: #365ac9;
+}
+
+.penalty-option:hover {
+    background-color: #e0e7ff;
+}
+
+/* Стили для кнопки "Применить" */
+.apply-button {
+    margin-top: 20px;
+    padding: 15px;
+    width: 100%;
+    background-color: #4169E1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.apply-button:hover {
+    background-color: #365ac9;
+}
+
+/* Адаптация для темной темы */
+@media (prefers-color-scheme: dark) {
+    .penalty-option {
+        background-color: #2c2c2c;
+        border-color: #444;
+        color: #E1E1E1;
+    }
+
+    .penalty-option:hover {
+        background-color: #333;
+    }
+
+    .penalty-option.selected {
+        background-color: #BB86FC;
+        border-color: #9c6dd0;
+        color: #1e1e1e;
+    }
+
+    .apply-button {
+        background-color: #BB86FC;
+    }
+
+    .apply-button:hover {
+        background-color: #9c6dd0;
+    }
 }
 
 /* Dark Theme */

@@ -13,18 +13,12 @@
     <link rel="apple-touch-icon" href="assets/icons/quit_512.svg">
 </head>
 <body>
-<!--    <div class="medal-container">-->
-<!--        <img id="medal7" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="7 Days" class="medal">-->
-<!--        <img id="medal15" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="15 Days" class="medal">-->
-<!--        <img id="medal30" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="30 Days" class="medal">-->
-<!--        <img id="medal60" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="60 Days" class="medal">-->
-<!--        <img id="medal90" src="assets/medal.svg" data-light="assets/medal.svg" data-dark="assets/medal_dark.svg" alt="90 Days" class="medal">-->
-<!--    </div>-->
     <div class="content-container">
         <div id="quoteContainer" class="quote-container hidden">Загрузка цитаты...</div>
         <div class="button-and-timer-container">
             <button id="settingsButton"><img src="assets/settings.svg" data-light="assets/settings.svg" data-dark="assets/settings_dark.svg" alt="Settings"></button>
-            <button id="resetButton"><img src="assets/reset.svg" data-light="assets/reset.svg" data-dark="assets/reset_dark.svg" alt="Reset"></button>
+            <button id="resetButton"><img src="assets/edit.svg" data-light="assets/edit.svg" data-dark="assets/edit_dark.svg" alt="Reset"></button>
+            <button id="infoButton"><img src="assets/info.svg" data-light="assets/info.svg" data-dark="assets/info_dark.svg" alt="Info"></button>
             <div class="container">
                 <p id="timer">Загрузка...</p>
                 <div class="progress-container">
@@ -54,6 +48,25 @@
                 <span class="parameter-label">Энергия:</span>
                 <span id="energy-level" class="parameter-value">-</span>
             </div>
+        </div>
+    </div>
+    <!-- Модальное окно -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModal" class="close-button">&times;</span>
+            <h2 id="modalTitle">Стадия</h2>
+            <div id="modalDescription"></div>
+        </div>
+    </div>
+    <!-- Модальное окно для выбора штрафов -->
+    <div id="penaltyModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closePenaltyModal" class="close-button">&times;</span>
+            <h2>Выберите штрафы</h2>
+            <form id="penaltyForm">
+                <!-- Опции штрафов будут здесь -->
+            </form>
+            <button id="applyPenaltyButton" class="apply-button">Применить</button>
         </div>
     </div>
     <script src="script.js"></script>
