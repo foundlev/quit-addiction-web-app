@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 message = 'Трансформация';
             }
 
-            timerElement.textContent = message;
+            timerElement.innerHTML = `${formatTime(elapsedTime)}<br>${message}`;
             progressBar.style.width = `${elapsedPercentage}%`;
 
         }, 1000);
