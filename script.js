@@ -747,3 +747,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Ваш существующий код...
+
+    // Получаем элементы ползунков и отображаемые значения
+    const anxietySlider = document.getElementById('anxiety-slider');
+    const anxietyValue = document.getElementById('anxiety-value');
+    const socialitySlider = document.getElementById('sociality-slider');
+    const socialityValue = document.getElementById('sociality-value');
+    const sleepSlider = document.getElementById('sleep-slider');
+    const sleepValue = document.getElementById('sleep-value');
+    const impulsivitySlider = document.getElementById('impulsivity-slider');
+    const impulsivityValue = document.getElementById('impulsivity-value');
+    const energySlider = document.getElementById('energy-slider');
+    const energyValue = document.getElementById('energy-value');
+
+    // Обновляем отображаемые значения при перемещении ползунков
+    if (anxietySlider) {
+        anxietySlider.addEventListener('input', function() {
+            anxietyValue.textContent = anxietySlider.value;
+        });
+    }
+
+    if (socialitySlider) {
+        socialitySlider.addEventListener('input', function() {
+            socialityValue.textContent = socialitySlider.value;
+        });
+    }
+
+    if (sleepSlider) {
+        sleepSlider.addEventListener('input', function() {
+            sleepValue.textContent = sleepSlider.value;
+        });
+    }
+
+    if (impulsivitySlider) {
+        impulsivitySlider.addEventListener('input', function() {
+            impulsivityValue.textContent = impulsivitySlider.value;
+        });
+    }
+
+    if (energySlider) {
+        energySlider.addEventListener('input', function() {
+            energyValue.textContent = energySlider.value;
+        });
+    }
+
+    // Обработчик для кнопки "Сохранить"
+    const saveButton = document.getElementById('save-button');
+    if (saveButton) {
+        saveButton.addEventListener('click', function() {
+            // Получаем текущий timestamp в секундах
+            const timestamp = Math.floor(Date.now() / 1000);
+
+            // Собираем значения ползунков
+            const data = {
+                anxiety: parseInt(anxietySlider.value),
+                sociality: parseInt(socialitySlider.value),
+                sleep: parseInt(sleepSlider.value),
+                impulsivity: parseInt(impulsivitySlider.value),
+                energy: parseInt(energySlider.value)
+            };
+
+            // Получаем существующие записи из localStorage
+            let records = JSON.parse(localStorage.getItem('records')) || [];
+
+            // Добавляем новую запись
+            records.push({
+                time: timestamp,
+                data: data
+            });
+
+            // Сохраняем обратно в localStorage
+            localStorage.setItem('records', JSON.stringify(records));
+
+            // Отображаем сообщение об успешном сохранении
+            alert('Данные сохранены');
+        });
+    }
+});
+

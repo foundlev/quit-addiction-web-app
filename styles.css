@@ -348,6 +348,142 @@ bold {
     background-color: #365ac9;
 }
 
+.sliders-container {
+    width: 80%;
+    max-width: 500px; /* Ограничение ширины */
+    margin: 0 auto; /* Центрирование */
+    padding: 20px;
+}
+
+.slider {
+    margin-bottom: 5px;
+}
+
+.slider label {
+    display: block;
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.slider input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px; /* Высота полосы */
+    background: #e0e0e0;
+    border-radius: 4px;
+    outline: none;
+    margin: 0; /* Убираем лишние отступы */
+    position: relative;
+}
+
+.slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; /* Размер кружка */
+    height: 20px;
+    background-color: #4169E1;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    top: -6px; /* Центрирование относительно полосы */
+}
+
+.slider input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #4169E1;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    top: -6px; /* Для Firefox */
+}
+
+.slider input[type="range"]::-webkit-slider-thumb:hover,
+.slider input[type="range"]::-moz-range-thumb:hover {
+    background-color: #365ac9;
+}
+
+.slider input[type="range"]::-webkit-slider-runnable-track {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #4169E1 0%, #4169E1 var(--percentage), #e0e0e0 var(--percentage), #e0e0e0 100%);
+}
+
+.slider .slider-value {
+    text-align: right;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+#save-button {
+    margin-top: 20px;
+    padding: 15px;
+    width: 100%;
+    background-color: #4169E1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+#save-button:hover {
+    background-color: #365ac9;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+    .sliders-container {
+        color: #E1E1E1;
+    }
+
+    .slider label {
+        color: #ccc;
+    }
+
+    .slider input[type="range"] {
+        background: #444;
+    }
+
+    .slider input[type="range"]::-webkit-slider-thumb,
+    .slider input[type="range"]::-moz-range-thumb {
+        background-color: #BB86FC;
+        border-color: #fff;
+    }
+
+    .slider input[type="range"]::-webkit-slider-thumb:hover,
+    .slider input[type="range"]::-moz-range-thumb:hover {
+        background-color: #9c6dd0;
+    }
+
+    .slider input[type="range"]::-webkit-slider-runnable-track {
+        background: linear-gradient(to right, #BB86FC 0%, #BB86FC var(--percentage), #444 var(--percentage), #444 100%);
+    }
+
+    .slider .slider-value {
+        color: #bbb;
+    }
+
+    #save-button {
+        background-color: #BB86FC;
+    }
+
+    #save-button:hover {
+        background-color: #9c6dd0;
+    }
+}
+
+
 /* Адаптация для темной темы */
 @media (prefers-color-scheme: dark) {
     .penalty-option {
