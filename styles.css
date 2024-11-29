@@ -41,7 +41,7 @@ body, html {
 }
 
 .content-container {
-    margin-top: auto; /* Сдвигает элемент к низу */
+    margin-top: center; /* Сдвигает элемент к низу */
     width: 100vw; /* Если нужно растянуть */
 }
 

@@ -533,9 +533,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let penaltiesAfterEffectiveStart = penaltyList.filter(p => p.timestamp > effectiveStartTime);
 
         // Суммируем значения штрафов (value в миллисекундах)
-        let totalPenaltyTime = penaltiesAfterEffectiveStart.reduce((total, p) => {
-            return total + (p.value * 1000); // Конвертируем секунды в миллисекунды
-        }, 0);
+//        let totalPenaltyTime = penaltiesAfterEffectiveStart.reduce((total, p) => {
+//            return total + (p.value * 1000); // Конвертируем секунды в миллисекунды
+//        }, 0);
+        totalPenaltyTime = 0;
 
         let elapsedTime = now - effectiveStartTime - totalPenaltyTime;
 
@@ -594,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик события для кнопки "infoButton"
     infoButton.addEventListener('click', function() {
         // Получаем название текущей стадии из элемента с id="timer"
-        const currentStage = timerElement.textContent.trim();
+        const currentStage = timerElement.innerHTML.split('<br>')[1].trim();
 
         // Получаем описание для текущей стадии из словаря "stages"
         const description = stages[currentStage] || 'Описание недоступно.';
@@ -771,6 +772,39 @@ function canSaveSliders() {
     return hours >= 20;
 }
 
+function getSlidersValues() {
+    // Получаем существующие записи из localStorage
+    let records = JSON.parse(localStorage.getItem('records')) || [];
+
+    // Если records пустой, то возвращаем {}
+    if (records.length === 0) {
+        return {};
+    }
+
+    // Получаем запись с самым большим timestamp и записывает ключ data в lastData
+    const lastData = records.reduce((prev, current) => {
+        return (prev.timestamp > current.timestamp)? prev : current;
+    }, records[0]);
+
+    // Возвращаем lastData.data, это словарь со значениями ползунков
+    return lastData.data;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Установить значения слайдеров
+    const slidersValues = getSlidersValues(); // Получаем значения
+    const sliders = document.querySelectorAll('input[type="range"]'); // Все слайдеры
+
+    sliders.forEach(slider => {
+        const sliderName = slider.name; // Например, "anxiety", "sociality"
+        if (sliderName in slidersValues) {
+            slider.value = slidersValues[sliderName]; // Устанавливаем значение из словаря
+            const valueItem = document.getElementById(`${sliderName}-value`);
+            valueItem.textContent = slider.value; // Отображаем значение в панели инструментов
+        }
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Получаем элементы ползунков и отображаемые значения
     const anxietySlider = document.getElementById('anxiety-slider');
@@ -814,7 +848,6 @@ document.addEventListener('DOMContentLoaded', function() {
             energyValue.textContent = energySlider.value;
         });
     }
-
 
     // Обработчик для кнопки "Сохранить"
     const saveButton = document.getElementById('save-button');
