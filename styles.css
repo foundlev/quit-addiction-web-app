@@ -48,7 +48,7 @@ body, html {
 .container {
     color: #4169E1;
     padding: 0 20px 0 20px;
-    font-size: 46px;
+    font-size: 40px;
     font-weight: bold;
 }
 
@@ -441,8 +441,16 @@ bold {
     transition: background-color 0.3s ease;
 }
 
-#save-button:hover {
+#save-button:active {
     background-color: #365ac9;
+}
+
+#save-button:disabled {
+    background-color: #cccccc; /* Цвет для отключенной кнопки */
+    color: #666666; /* Цвет текста */
+    cursor: not-allowed; /* Курсор запрещён */
+    opacity: 0.6; /* Прозрачность для эффекта недоступности */
+    pointer-events: none; /* Полностью отключаем взаимодействие */
 }
 
 /* Темная тема */
@@ -482,7 +490,7 @@ bold {
         background-color: #BB86FC;
     }
 
-    #save-button:hover {
+    #save-button:active {
         background-color: #9c6dd0;
     }
 }

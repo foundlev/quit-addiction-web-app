@@ -37,11 +37,11 @@
                 <span id="sociality-level" class="parameter-value">-</span>
             </div>
             <div class="parameter">
-                <span class="parameter-label">Сон:</span>
-                <span id="sleep-quality" class="parameter-value">-</span>
+                <span class="parameter-label">Настроение:</span>
+                <span id="mood-quality" class="parameter-value">-</span>
             </div>
             <div class="parameter">
-                <span class="parameter-label">Импульсивность:</span>
+                <span class="parameter-label">Зов срыва:</span>
                 <span id="impulsivity-level" class="parameter-value">-</span>
             </div>
             <div class="parameter">
@@ -53,9 +53,14 @@
     <div class="sliders-container">
         <form id="sliders-form">
             <div class="slider">
-                <label for="anxiety-slider">Тревожность:</label>
-                <input type="range" id="anxiety-slider" name="anxiety" min="1" max="5" value="3">
-                <span id="anxiety-value">3</span>
+                <label for="mood-slider">Настроение:</label>
+                <input type="range" id="mood-slider" name="sleep" min="1" max="5" value="3">
+                <span id="mood-value">3</span>
+            </div>
+            <div class="slider">
+                <label for="energy-slider">Энергия:</label>
+                <input type="range" id="energy-slider" name="energy" min="1" max="5" value="3">
+                <span id="energy-value">3</span>
             </div>
             <div class="slider">
                 <label for="sociality-slider">Социальность:</label>
@@ -63,21 +68,16 @@
                 <span id="sociality-value">3</span>
             </div>
             <div class="slider">
-                <label for="sleep-slider">Сон:</label>
-                <input type="range" id="sleep-slider" name="sleep" min="1" max="5" value="3">
-                <span id="sleep-value">3</span>
+                <label for="anxiety-slider">Тревожность:</label>
+                <input type="range" id="anxiety-slider" name="anxiety" min="1" max="5" value="3">
+                <span id="anxiety-value">3</span>
             </div>
             <div class="slider">
-                <label for="impulsivity-slider">Импульсивность:</label>
+                <label for="impulsivity-slider">Зов срыва:</label>
                 <input type="range" id="impulsivity-slider" name="impulsivity" min="1" max="5" value="3">
                 <span id="impulsivity-value">3</span>
             </div>
-            <div class="slider">
-                <label for="energy-slider">Энергия:</label>
-                <input type="range" id="energy-slider" name="energy" min="1" max="5" value="3">
-                <span id="energy-value">3</span>
-            </div>
-            <button type="button" id="save-button">Сохранить</button>
+            <button type="button" id="save-button" disabled>Сохранить</button>
         </form>
     </div>
 

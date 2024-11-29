@@ -281,7 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Вычисляем количество дней
             const days = elapsedTime / (1000 * 60 * 60 * 24);
-            console.log(`Прошло дней: ${days}`);
 
             let message = '';
             if (days < 3) {
@@ -435,17 +434,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const phase3 = 50 + 50 / (1 + Math.exp(-0.1 * (days - 45)));
         const phase4 = 90 + 14 / (1 + Math.exp(-0.1 * (days - 75)));
 
-        let sleepQuality;
+        let moodQuality;
         if (days < 3) {
-            sleepQuality = phase1;
+            moodQuality = phase1;
         } else if (days < 30) {
-            sleepQuality = phase2;
+            moodQuality = phase2;
         } else if (days < 60) {
-            sleepQuality = phase3;
+            moodQuality = phase3;
         } else {
-            sleepQuality = phase4;
+            moodQuality = phase4;
         }
-        return Math.max(0, Math.min(100, sleepQuality));
+        return Math.max(0, Math.min(100, moodQuality));
     }
 
     function calculateImpulsivity(t) {
@@ -748,16 +747,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Ваш существующий код...
+function canSaveSliders() {
+    let records = JSON.parse(localStorage.getItem('records')) || [];
 
+    // Если records пустой, то возвращаем true
+    if (records.length === 0) {
+        return true;
+    }
+
+    // Получаем значение последнего сохранения lastSaveTime из localStorage
+    const lastSaveTime = parseInt(localStorage.getItem('lastSaveTime')) || 0;
+    // Получаем текущий timestamp в секундах
+    const timestamp = Math.floor(Date.now() / 1000);
+
+    // Если прошло меньше 12-ти часов с lastSaveTime, то False, иначе продолжаем дальше.
+    if (timestamp - lastSaveTime < 12 * 3600) {
+        return false;
+    }
+
+    // Если сейчас время больше чем 20:00
+    const now = new Date(); // Получаем текущую дату и время
+    const hours = now.getHours(); // Получаем часы (в 24-часовом формате)
+    return hours >= 20;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
     // Получаем элементы ползунков и отображаемые значения
     const anxietySlider = document.getElementById('anxiety-slider');
     const anxietyValue = document.getElementById('anxiety-value');
     const socialitySlider = document.getElementById('sociality-slider');
     const socialityValue = document.getElementById('sociality-value');
-    const sleepSlider = document.getElementById('sleep-slider');
-    const sleepValue = document.getElementById('sleep-value');
+    const moodSlider = document.getElementById('mood-slider');
+    const moodValue = document.getElementById('mood-value');
     const impulsivitySlider = document.getElementById('impulsivity-slider');
     const impulsivityValue = document.getElementById('impulsivity-value');
     const energySlider = document.getElementById('energy-slider');
@@ -776,9 +797,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (sleepSlider) {
-        sleepSlider.addEventListener('input', function() {
-            sleepValue.textContent = sleepSlider.value;
+    if (moodSlider) {
+        moodSlider.addEventListener('input', function() {
+            moodValue.textContent = moodSlider.value;
         });
     }
 
@@ -794,8 +815,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
     // Обработчик для кнопки "Сохранить"
     const saveButton = document.getElementById('save-button');
+    if (canSaveSliders()) {
+        saveButton.disabled = false;
+    }
+
     if (saveButton) {
         saveButton.addEventListener('click', function() {
             // Получаем текущий timestamp в секундах
@@ -805,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = {
                 anxiety: parseInt(anxietySlider.value),
                 sociality: parseInt(socialitySlider.value),
-                sleep: parseInt(sleepSlider.value),
+                mood: parseInt(moodSlider.value),
                 impulsivity: parseInt(impulsivitySlider.value),
                 energy: parseInt(energySlider.value)
             };
@@ -821,9 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Сохраняем обратно в localStorage
             localStorage.setItem('records', JSON.stringify(records));
-
-            // Отображаем сообщение об успешном сохранении
-            alert('Данные сохранены');
+            localStorage.setItem('lastSaveTime', timestamp);
+            saveButton.disabled = true;
         });
     }
 });
