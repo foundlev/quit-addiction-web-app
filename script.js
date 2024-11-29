@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const applyPenaltyButton = document.getElementById('applyPenaltyButton');
 
     const medals = document.querySelectorAll('.medal'); // Выбираем все элементы с классом 'medal'
-    const buttons = document.querySelectorAll('#settingsButton img, #resetButton img'); // Выбираем все изображения кнопок
+    const buttons = document.querySelectorAll('#settingsButton img, #resetButton img, #infoButton img'); // Выбираем все изображения кнопок
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)'); // Создаем объект MediaQueryList для отслеживания изменения темы
 
     const modal = document.getElementById('modal');

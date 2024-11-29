@@ -33,13 +33,21 @@ body, html {
     display: none; /* Изначально скрыт */
 }
 
+body, html {
+    height: 100%; /* Гарантируем, что высота страницы равна 100% */
+    margin: 0; /* Убираем отступы */
+    display: flex;
+    flex-direction: column; /* Вертикальный поток */
+}
+
 .content-container {
-    padding-top: 100px;
+    margin-top: auto; /* Сдвигает элемент к низу */
+    width: 100vw; /* Если нужно растянуть */
 }
 
 .container {
     color: #4169E1;
-    padding: 20px;
+    padding: 0 20px 0 20px;
     font-size: 46px;
     font-weight: bold;
 }
@@ -104,10 +112,6 @@ body, html {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     quotes: "“" "”" "‘" "’";
     font-style: normal;
-}
-
-.container {
-    margin-top: -200px; /* Adjust this value as needed */
 }
 
 .quote-container:before {
@@ -362,7 +366,7 @@ bold {
 .slider label {
     display: block;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: #333;
     margin-bottom: 10px;
 }
@@ -424,7 +428,7 @@ bold {
 }
 
 #save-button {
-    margin-top: 20px;
+    margin-top: 5px;
     padding: 15px;
     width: 100%;
     background-color: #4169E1;
