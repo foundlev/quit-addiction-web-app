@@ -712,22 +712,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (selectedPenalties.length > 0) {
-            // Находим штраф с максимальным значением
-            const maxPenalty = selectedPenalties.reduce((prev, current) => {
-                return (prev.value > current.value) ? prev : current;
+            const nowTime = new Date().getTime();
+            const penaltiesToSaveList = [];
+
+            selectedPenalties.forEach(currentPenalty => {
+                const penaltyRecord = {
+                    name: currentPenalty.name,
+                    timestamp: nowTime,
+                    value: currentPenalty.value // в секундах
+                };
+                penaltiesToSaveList.push(penaltyRecord);
             });
 
-            // Сохраняем штраф в localStorage
-            const penaltyRecord = {
-                name: maxPenalty.name,
-                timestamp: new Date().getTime(),
-                value: maxPenalty.value // в секундах
-            };
-
             // Получаем существующий список штрафов из localStorage
-            let penaltyList = JSON.parse(localStorage.getItem('penaltyList')) || [];
-            penaltyList.push(penaltyRecord);
-            localStorage.setItem('penaltyList', JSON.stringify(penaltyList));
+            const penaltyLoadedList = JSON.parse(localStorage.getItem('penaltyList')) || [];
+            // Расширяем список penaltyList списком penaltiesToSaveList.
+            const newPenaltiesList = penaltyLoadedList.concat(penaltiesToSaveList);
+
+            localStorage.setItem('penaltyList', JSON.stringify(newPenaltiesList));
 
             // Скрываем модальное окно и обновляем страницу
             penaltyModal.classList.add('hidden');
