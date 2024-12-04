@@ -227,6 +227,8 @@ body, html {
     max-width: 500px;
     position: relative;
     color: #333;
+    max-height: 80vh; /* Ограничиваем максимальную высоту модального окна */
+    overflow-y: auto; /* Добавляем вертикальную прокрутку при переполнении */
 }
 
 .close-button {
@@ -250,6 +252,31 @@ bold {
 #modalDescription {
     font-weight: normal;
     font-size: 1.1em
+    max-height: calc(80vh - 60px); /* Учитываем высоту заголовка и отступов */
+    overflow-y: auto; /* Добавляем вертикальную прокрутку */
+}
+
+/* Стили для кнопок выбора в модальном окне */
+.choice-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.choice-button {
+    padding: 10px 20px;
+    background-color: #4169E1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.choice-button:active {
+    background-color: #365ac9;
 }
 
 /* Адаптация для темной темы */

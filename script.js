@@ -906,16 +906,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработчик для кнопки "AI"
-    const aiAdviceButton = document.getElementById('ai-advice-button');
-    aiAdviceButton.addEventListener('click', function() {
+    // Добавляем функцию для отображения модального окна
+    function showModal(title, description) {
+        modalTitle.textContent = title;
+        modalDescription.innerHTML = description;
+        modal.classList.remove('hidden');
+    }
+
+    function showChoiceModal() {
+        modalTitle.textContent = 'Выберите действие';
+        modalDescription.innerHTML = `
+            <p>У вас уже есть сохраненный ответ. Что вы хотите сделать?</p>
+            <div class="choice-buttons">
+                <button id="loadPrevious" class="choice-button">Загрузить</button>
+                <button id="getNew" class="choice-button">Получить новый</button>
+            </div>
+        `;
+        modal.classList.remove('hidden');
+
+        // Обработчик для загрузки предыдущего ответа
+        document.getElementById('loadPrevious').addEventListener('click', function() {
+            modal.classList.add('hidden'); // Закрываем окно выбора
+            const responseText = localStorage.getItem('aiResponse');
+            showModal('Ответ', responseText);
+        });
+
+        // Обработчик для получения нового ответа
+        document.getElementById('getNew').addEventListener('click', function() {
+            modal.classList.add('hidden'); // Закрываем окно выбора
+            makeFetchRequest(); // Делаем новый запрос
+        });
+    }
+
+    // Функция для выполнения запроса
+    function makeFetchRequest() {
         // Получаем информацию о всех негативных событиях.
         penalties = JSON.parse(localStorage.getItem('penaltyList')) || [];
         // Получаем записи оценки.
         records = JSON.parse(localStorage.getItem('records')) || [];
 
         // Преобразуем список в текстовый формат
-        const text_1 = "\nОтмеченные отрицательных действия (последние 30):\n" + penalties.slice(-30).map(item => {
+        const text_1 = "\nОтмеченные отрицательные действия (последние 30):\n" + penalties.slice(-30).map(item => {
             return `${formatTimestamp(item.timestamp)}: ${item.name}`;
         }).join('\n') + "\n";
 
@@ -925,7 +956,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Получаем текущее время с последнего срыва.
         const text_3 = `Прошло времени с последнего полного срыва (дни:часы:минуты:секунды): ${formatTime(calculateElapsedTime())}\n`;
 
-        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a,  зов срыва - i):\n" + records.slice(-30).map(item => {
+        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
             return `Дата: ${formatTimestamp(item.time * 1000)} Оценки: m - ${item.data.mood}, e - ${item.data.energy}, s - ${item.data.sociality}, a - ${item.data.anxiety}, i - ${item.data.impulsivity}`;
         }).join('\n') + "\n";
 
@@ -933,7 +964,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
         const data = {
-            password: "1quit-password-jf029dks",
+            password: "quit-password-jf029dks",
             text: queryText
         };
 
@@ -952,11 +983,34 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(result => {
             console.log("Success:", result);
+            if (result.error) {
+                // Отображаем модальное окно с текстом ошибки
+                showModal("Ошибка", result.error);
+            } else {
+                // Извлекаем текст ответа и отображаем его в модальном окне
+                const responseText = result.choices[0].message.content;
+                // Сохраняем ответ в localStorage
+                localStorage.setItem('aiResponse', responseText);
+                showModal("Ответ", responseText);
+            }
         })
         .catch(error => {
             console.error("Error:", error);
+            // Отображаем модальное окно с текстом ошибки
+            showModal("Ошибка", error.message);
         });
+    }
 
+    // Обработчик для кнопки "AI"
+    const aiAdviceButton = document.getElementById('ai-advice-button');
+    aiAdviceButton.addEventListener('click', function() {
+        if (localStorage.getItem('aiResponse')) {
+            // Если есть сохраненный ответ, предлагаем выбор
+            showChoiceModal();
+        } else {
+            // Иначе делаем новый запрос
+            makeFetchRequest();
+        }
     });
-});
 
+});
