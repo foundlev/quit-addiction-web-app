@@ -1,3 +1,50 @@
+function formatTime(ms) {
+    const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+    return `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function calculateElapsedTime() {
+    let startTime = localStorage.getItem('startTime');
+    if (!startTime) {
+        startTime = new Date().getTime();
+        localStorage.setItem('startTime', startTime);
+    }
+
+    const now = new Date().getTime();
+
+    let penaltyList = JSON.parse(localStorage.getItem('penaltyList')) || [];
+
+    // Находим последний полный срыв (штраф с value === 0)
+    let lastFullRelapse = penaltyList.filter(p => p.value === 0)
+                                     .sort((a, b) => b.timestamp - a.timestamp)[0];
+
+    // Определяем effectiveStartTime
+    let effectiveStartTime = startTime;
+    if (lastFullRelapse && lastFullRelapse.timestamp > startTime) {
+        effectiveStartTime = lastFullRelapse.timestamp;
+    }
+
+    // Отфильтровываем штрафы после effectiveStartTime
+    let penaltiesAfterEffectiveStart = penaltyList.filter(p => p.timestamp > effectiveStartTime);
+
+    // Суммируем значения штрафов (value в миллисекундах)
+//        let totalPenaltyTime = penaltiesAfterEffectiveStart.reduce((total, p) => {
+//            return total + (p.value * 1000); // Конвертируем секунды в миллисекунды
+//        }, 0);
+    totalPenaltyTime = 0;
+
+    let elapsedTime = now - effectiveStartTime - totalPenaltyTime;
+
+    if (elapsedTime < 0) {
+        elapsedTime = 0;
+    }
+
+    return elapsedTime;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const stages = {
         "Абстиненция": `
@@ -353,14 +400,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
 
-    function formatTime(ms) {
-        const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-        return `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
     // Запуск таймера при загрузке страницы
     let startTime = localStorage.getItem('startTime');
     if (!startTime) {
@@ -512,39 +551,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const green = Math.min(255, Math.floor(255 - 2.55 * value));
             return `rgb(${red}, ${green}, 0)`;
         }
-    }
-
-    function calculateElapsedTime() {
-        const now = new Date().getTime();
-
-        let penaltyList = JSON.parse(localStorage.getItem('penaltyList')) || [];
-
-        // Находим последний полный срыв (штраф с value === 0)
-        let lastFullRelapse = penaltyList.filter(p => p.value === 0)
-                                         .sort((a, b) => b.timestamp - a.timestamp)[0];
-
-        // Определяем effectiveStartTime
-        let effectiveStartTime = startTime;
-        if (lastFullRelapse && lastFullRelapse.timestamp > startTime) {
-            effectiveStartTime = lastFullRelapse.timestamp;
-        }
-
-        // Отфильтровываем штрафы после effectiveStartTime
-        let penaltiesAfterEffectiveStart = penaltyList.filter(p => p.timestamp > effectiveStartTime);
-
-        // Суммируем значения штрафов (value в миллисекундах)
-//        let totalPenaltyTime = penaltiesAfterEffectiveStart.reduce((total, p) => {
-//            return total + (p.value * 1000); // Конвертируем секунды в миллисекунды
-//        }, 0);
-        totalPenaltyTime = 0;
-
-        let elapsedTime = now - effectiveStartTime - totalPenaltyTime;
-
-        if (elapsedTime < 0) {
-            elapsedTime = 0;
-        }
-
-        return elapsedTime;
     }
 
     const updateTheme = (e) => {
@@ -807,6 +813,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
+// Функция для форматирования timestamp в hh:mm dd.mm.yyyy
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Месяцы начинаются с 0
+    const year = date.getFullYear();
+    return `${hours}:${minutes} ${day}.${month}.${year}`;
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Получаем элементы ползунков и отображаемые значения
     const anxietySlider = document.getElementById('anxiety-slider');
@@ -886,5 +905,58 @@ document.addEventListener('DOMContentLoaded', function() {
             saveButton.disabled = true;
         });
     }
+
+    // Обработчик для кнопки "AI"
+    const aiAdviceButton = document.getElementById('ai-advice-button');
+    aiAdviceButton.addEventListener('click', function() {
+        // Получаем информацию о всех негативных событиях.
+        penalties = JSON.parse(localStorage.getItem('penaltyList')) || [];
+        // Получаем записи оценки.
+        records = JSON.parse(localStorage.getItem('records')) || [];
+
+        // Преобразуем список в текстовый формат
+        const text_1 = "\nОтмеченные отрицательных действия (последние 30):\n" + penalties.slice(-30).map(item => {
+            return `${formatTimestamp(item.timestamp)}: ${item.name}`;
+        }).join('\n') + "\n";
+
+        // Текущее дата и время в текстовом формате
+        const text_2 = `Текущее время (hh:mm dd.mm.yyyy): ${formatTimestamp(Math.floor(Date.now()))}\n`;
+
+        // Получаем текущее время с последнего срыва.
+        const text_3 = `Прошло времени с последнего полного срыва (дни:часы:минуты:секунды): ${formatTime(calculateElapsedTime())}\n`;
+
+        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a,  зов срыва - i):\n" + records.slice(-30).map(item => {
+            return `Дата: ${formatTimestamp(item.time * 1000)} Оценки: m - ${item.data.mood}, e - ${item.data.energy}, s - ${item.data.sociality}, a - ${item.data.anxiety}, i - ${item.data.impulsivity}`;
+        }).join('\n') + "\n";
+
+        const queryText = text_2 + text_3 + text_1 + text_4;
+
+        const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
+        const data = {
+            password: "1quit-password-jf029dks",
+            text: queryText
+        };
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // Если ожидается JSON в ответе
+        })
+        .then(result => {
+            console.log("Success:", result);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+
+    });
 });
 
