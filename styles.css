@@ -249,9 +249,17 @@ bold {
     font-weight: bold;
 }
 
+italic {
+    font-style: italic;
+    padding: 2px;
+    border-radius: 3px;
+    background-color: #e3e3e3;
+}
+
 #modalDescription {
     font-weight: normal;
-    font-size: 1.1em
+    font-size: 1.1em;
+    line-height: 1.4em;
     max-height: calc(80vh - 60px); /* Учитываем высоту заголовка и отступов */
     overflow-y: auto; /* Добавляем вертикальную прокрутку */
 }
@@ -277,6 +285,30 @@ bold {
 
 .choice-button:active {
     background-color: #365ac9;
+}
+
+/* Стили для загрузочного спиннера */
+.loading-spinner {
+    border: 8px solid #f3f3f3; /* Светло-серый */
+    border-top: 8px solid #4169E1; /* Синий */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto; /* Центрирование */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Темная тема для спиннера */
+@media (prefers-color-scheme: dark) {
+    .loading-spinner {
+        border: 8px solid #444; /* Темно-серый */
+        border-top: 8px solid #BB86FC; /* Фиолетовый */
+    }
 }
 
 /* Адаптация для темной темы */
@@ -615,5 +647,9 @@ bold {
 
     .container {
         color: #BB86FC; /* Bright purple color for timer text */
+    }
+
+    italic {
+        background-color: #424242;
     }
 }

@@ -45,6 +45,34 @@ function calculateElapsedTime() {
     return elapsedTime;
 }
 
+function getPassword() {
+    // Получаем пароль из localStorage
+    return localStorage.getItem('quitAppPassword');
+}
+
+function savePassword(newPassword) {
+    // Сохраняем новый пароль в localStorage
+    localStorage.setItem('quitAppPassword', newPassword);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Если пароль не сохранен, то требуем ввести его.
+    if (!getPassword()) {
+        // Запрашиваем пароль через окно
+        const passwordInput = prompt('Введите пароль для запрета выключения приложения:', '');
+        if (passwordInput) {
+            // Сохраняем пароль
+            savePassword(passwordInput);
+            // Обновляем страницу
+            location.reload();
+        } else {
+            // Если пароль не введен, то выходим из приложения
+            alert('Пароль не введен!');
+            window.close();
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const stages = {
         "Абстиненция": `
@@ -913,6 +941,16 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.classList.remove('hidden');
     }
 
+    // Функция для отображения модального окна с загрузкой
+    function showLoadingModal() {
+        modalTitle.textContent = 'Пожалуйста, подождите...';
+        modalDescription.innerHTML = `
+            <div class="loading-spinner"></div>
+            <p>Получение ответа...</p>
+        `;
+        modal.classList.remove('hidden');
+    }
+
     function showChoiceModal() {
         modalTitle.textContent = 'Выберите действие';
         modalDescription.innerHTML = `
@@ -938,8 +976,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Функция для выполнения запроса
+    // Обновляем функцию makeFetchRequest
     function makeFetchRequest() {
+        // Показать модальное окно с загрузкой
+        showLoadingModal();
+
         // Получаем информацию о всех негативных событиях.
         penalties = JSON.parse(localStorage.getItem('penaltyList')) || [];
         // Получаем записи оценки.
@@ -964,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
         const data = {
-            password: "quit-password-jf029dks",
+            password: getPassword(),
             text: queryText
         };
 
@@ -976,28 +1017,26 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(data)
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json(); // Если ожидается JSON в ответе
+            return response.json();
         })
         .then(result => {
-            console.log("Success:", result);
-            if (result.error) {
-                // Отображаем модальное окно с текстом ошибки
-                showModal("Ошибка", result.error);
-            } else {
+            if (result.choices) {
                 // Извлекаем текст ответа и отображаем его в модальном окне
                 const responseText = result.choices[0].message.content;
                 // Сохраняем ответ в localStorage
                 localStorage.setItem('aiResponse', responseText);
                 showModal("Ответ", responseText);
+            } else if (result.error) {
+                // Отображаем модальное окно с текстом ошибки
+                showModal("Ошибка", result.error);
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
         })
         .catch(error => {
             console.error("Error:", error);
             // Отображаем модальное окно с текстом ошибки
-            showModal("Ошибка", error.message);
+            showModal("Ошибка", error);
         });
     }
 
