@@ -978,8 +978,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Получаем текущее время с последнего срыва.
         const text_3 = `Прошло времени с последнего полного срыва (дни:часы:минуты:секунды): ${formatTime(calculateElapsedTime())}\n`;
 
-        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Оценки: 1 - низкое, 2 - ниже среднего, 3 - средне, 4 - выше среднего, 5 - высокое. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
-            return `Дата: ${formatTimestamp(item.time * 1000)} Оценки: m - ${item.data.mood}, e - ${item.data.energy}, s - ${item.data.sociality}, a - ${item.data.anxiety}, i - ${item.data.impulsivity}`;
+        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
+            return `Дата: ${formatTimestamp(item.time * 1000)} Оценки. m: ${item.data.mood}, e: ${item.data.energy}, s: ${item.data.sociality}, a: ${item.data.anxiety}, i: ${item.data.impulsivity}`;
         }).join('\n') + "\n";
 
         const queryText = text_2 + text_3 + text_1 + text_4;
@@ -1162,3 +1162,64 @@ document.addEventListener('DOMContentLoaded', function() {
         location.reload();
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    let records = JSON.parse(localStorage.getItem('records')) || [];
+
+    // Проверяем, есть ли хоть один словарь с ключом "version"
+    let alreadyVersioned = records.some(record => 'version' in record);
+    if (alreadyVersioned) {
+        // Если у кого-то есть version, значит уже преобразовывать не нужно
+        return;
+    }
+
+    // Сохраняем резервную копию
+    localStorage.setItem('backupRecords', JSON.stringify(records));
+
+    // Если на всякий случай нужно отсортировать по времени
+    records.sort((a, b) => a.time - b.time);
+
+    // Инициализируем предыдущие значения
+    // Предположим, что у нас всегда есть эти ключи: mood, anxiety, sociality, impulsivity, energy
+    // Если перечень полей должен быть динамическим, можно взять ключи из первого словаря "data".
+    const fields = ['mood', 'anxiety', 'sociality', 'impulsivity', 'energy'];
+
+    let prevValues = {};
+    fields.forEach(f => prevValues[f] = 0);
+
+    let newRecords = [];
+
+    for (let oldRecord of records) {
+        let newData = {};
+        // Пересчёт для каждого поля
+        for (let f of fields) {
+            // Старое значение
+            let oldValue = oldRecord.data[f];
+            // Если какое-то значение отсутствует в старых данных,
+            // можно считать его равным 3 (т.е. без изменений),
+            // или 0 - в зависимости от бизнес-логики. Предположим по умолчанию 3.
+            if (oldValue === undefined || oldValue === null) {
+                oldValue = 3;
+            }
+            let delta = oldValue - 3;
+            let newValue = prevValues[f] + delta;
+            newData[f] = newValue;
+        }
+
+        // Записываем версию
+        let newRecord = {
+            time: oldRecord.time,
+            data: newData,
+            version: 2
+        };
+
+        // Добавляем в итоговый массив
+        newRecords.push(newRecord);
+        // Обновляем prevValues
+        prevValues = newData;
+    }
+
+    // Сохраняем новые записи в localStorage
+    localStorage.setItem('records', JSON.stringify(newRecords));
+});
+
