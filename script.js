@@ -765,15 +765,34 @@ function canSaveSliders() {
     // Получаем текущий timestamp в секундах
     const timestamp = Math.floor(Date.now() / 1000);
 
+    // Если прошло меньше 1 часа с lastSaveTime, то False, иначе продолжаем дальше.
+    console.log(timestamp - lastSaveTime);
+    if (timestamp - lastSaveTime < 1 * 3600) {
+        return false;
+    }
+
+    return true;
+}
+
+function shouldSaveSliders() {
+    let records = JSON.parse(localStorage.getItem('records')) || [];
+
+    // Если records пустой, то возвращаем true
+    if (records.length === 0) {
+        return true;
+    }
+
+    // Получаем значение последнего сохранения lastSaveTime из localStorage
+    const lastSaveTime = parseInt(localStorage.getItem('lastSaveTime')) || 0;
+    // Получаем текущий timestamp в секундах
+    const timestamp = Math.floor(Date.now() / 1000);
+
     // Если прошло меньше 12-ти часов с lastSaveTime, то False, иначе продолжаем дальше.
     if (timestamp - lastSaveTime < 12 * 3600) {
         return false;
     }
 
-    // Если сейчас время больше чем 20:00
-    const now = new Date(); // Получаем текущую дату и время
-    const hours = now.getHours(); // Получаем часы (в 24-часовом формате)
-    return hours >= 20;
+    return true;
 }
 
 function getSlidersValues() {
@@ -869,7 +888,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик для кнопки "Сохранить"
     const saveButton = document.getElementById('save-button');
     if (canSaveSliders()) {
-        setFaded('save-button');
+        saveButton.disabled = false;
+        if (shouldSaveSliders()) {
+            setFaded('save-button');
+        }
     }
 
     if (saveButton) {
@@ -898,13 +920,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Сохраняем обратно в localStorage
             localStorage.setItem('records', JSON.stringify(records));
             localStorage.setItem('lastSaveTime', timestamp);
-            unsetFaded('save-button');
+            saveButton.disabled = true;
 
-            // Устанавливаем название кнопки на "Сохранено" на 2 секунды
-            saveButton.textContent = 'Успешно!'
-            setTimeout(function() {
-                saveButton.textContent = 'Сохранить'
-            }, 2000);
+            location.reload();
         });
     }
 
