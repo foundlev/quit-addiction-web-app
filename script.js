@@ -325,22 +325,21 @@ document.addEventListener('DOMContentLoaded', function() {
 //        })
 //        .catch(error => console.error('Ошибка загрузки цитат: ', error));
 
-    const settingsButton = document.getElementById('settingsButton');
     let intervalId; // Хранение ID интервала для возможности его остановки
 
-    settingsButton.addEventListener('click', function() {
-        const inputTimestamp = prompt("Введите новый timestamp (в миллисекундах):");
-        if (inputTimestamp) {
-            const newTime = parseInt(inputTimestamp, 10);
-            if (!isNaN(newTime)) {
-                localStorage.setItem('startTime', newTime);
-                clearInterval(intervalId);
-                updateTimer();
-            } else {
-                alert("Введено некорректное значение. Пожалуйста, введите число.");
-            }
-        }
-    });
+//    settingsButton.addEventListener('click', function() {
+//        const inputTimestamp = prompt("Введите новый timestamp (в миллисекундах):");
+//        if (inputTimestamp) {
+//            const newTime = parseInt(inputTimestamp, 10);
+//            if (!isNaN(newTime)) {
+//                localStorage.setItem('startTime', newTime);
+//                clearInterval(intervalId);
+//                updateTimer();
+//            } else {
+//                alert("Введено некорректное значение. Пожалуйста, введите число.");
+//            }
+//        }
+//    });
 
     function updateTimer() {
         if (intervalId) {
@@ -766,7 +765,6 @@ function canSaveSliders() {
     const timestamp = Math.floor(Date.now() / 1000);
 
     // Если прошло меньше 1 часа с lastSaveTime, то False, иначе продолжаем дальше.
-    console.log(timestamp - lastSaveTime);
     if (timestamp - lastSaveTime < 1 * 3600) {
         return false;
     }
@@ -952,6 +950,12 @@ document.addEventListener('DOMContentLoaded', function() {
             makeFetchRequest(); // Делаем новый запрос
         });
     }
+
+    const settingsButton = document.getElementById('settingsButton');
+    settingsButton.addEventListener('click', function() {
+        const records = localStorage.getItem('records') || [];
+        showModal("Сохраненные записи", records);
+    });
 
     // Обновляем функцию makeFetchRequest
     function makeFetchRequest() {
@@ -1158,4 +1162,3 @@ document.addEventListener('DOMContentLoaded', function() {
         location.reload();
     });
 });
-
