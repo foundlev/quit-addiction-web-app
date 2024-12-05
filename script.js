@@ -901,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик для кнопки "Сохранить"
     const saveButton = document.getElementById('save-button');
     if (canSaveSliders()) {
-        saveButton.disabled = false;
+        setFaded('save-button');
     }
 
     if (saveButton) {
@@ -930,7 +930,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Сохраняем обратно в localStorage
             localStorage.setItem('records', JSON.stringify(records));
             localStorage.setItem('lastSaveTime', timestamp);
-            saveButton.disabled = true;
+            unsetFaded('save-button');
+
+            // Устанавливаем название кнопки на "Сохранено" на 2 секунды
+            saveButton.textContent = 'Успешно!'
+            setTimeout(function() {
+                saveButton.textContent = 'Сохранить'
+            }, 2000);
         });
     }
 
@@ -957,7 +963,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>У вас уже есть сохраненный ответ. Что вы хотите сделать?</p>
             <div class="choice-buttons">
                 <button id="loadPrevious" class="choice-button">Загрузить</button>
-                <button id="getNew" class="choice-button">Получить новый</button>
+                <button id="getNew" class="choice-button">Новый</button>
             </div>
         `;
         modal.classList.remove('hidden');
@@ -997,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Получаем текущее время с последнего срыва.
         const text_3 = `Прошло времени с последнего полного срыва (дни:часы:минуты:секунды): ${formatTime(calculateElapsedTime())}\n`;
 
-        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
+        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Оценки: 1 - низкое, 2 - ниже среднего, 3 - средне, 4 - выше среднего, 5 - высокое. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
             return `Дата: ${formatTimestamp(item.time * 1000)} Оценки: m - ${item.data.mood}, e - ${item.data.energy}, s - ${item.data.sociality}, a - ${item.data.anxiety}, i - ${item.data.impulsivity}`;
         }).join('\n') + "\n";
 
@@ -1053,3 +1059,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+
+function setFaded(element_id) {
+    const el = document.getElementById(element_id);
+    el.classList.add('faded');
+}
+
+function unsetFaded(element_id) {
+    const el = document.getElementById(element_id);
+    el.classList.remove('faded');
+}

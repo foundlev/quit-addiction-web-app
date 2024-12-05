@@ -267,7 +267,7 @@ italic {
 /* Стили для кнопок выбора в модальном окне */
 .choice-buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 20px;
 }
 
@@ -281,6 +281,14 @@ italic {
     font-size: 16px;
     font-weight: bold;
     transition: background-color 0.3s ease;
+}
+
+#loadPrevious {
+    width: 57%;
+}
+
+#getNew {
+    width: 40%;
 }
 
 .choice-button:active {
@@ -503,6 +511,23 @@ italic {
     font-size: 20px;
     font-weight: bold;
     transition: background-color 0.3s ease;
+}
+
+@keyframes shine {
+    0% {
+        background-position: -300%;
+    }
+    100% {
+        background-position: 300%;
+    }
+}
+
+.faded {
+    background: linear-gradient(90deg, rgba(65, 105, 225, 0.8), rgba(255, 255, 255, 0.5), rgba(65, 105, 225, 0.8));
+    background-size: 200% auto;
+    color: #fff;
+    animation: shine 20s linear infinite;
+    box-shadow: 0 4px 15px rgba(65, 105, 225, 0.6);
 }
 
 #ai-advice-button {
