@@ -813,21 +813,6 @@ function getSlidersValues() {
     return lastData.data;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Установить значения слайдеров
-    const slidersValues = getSlidersValues(); // Получаем значения
-    const sliders = document.querySelectorAll('input[type="range"]'); // Все слайдеры
-
-    sliders.forEach(slider => {
-        const sliderName = slider.name; // Например, "anxiety", "sociality"
-        if (sliderName in slidersValues) {
-            slider.value = slidersValues[sliderName]; // Устанавливаем значение из словаря
-            const valueItem = document.getElementById(`${sliderName}-value`);
-            valueItem.textContent = slider.value; // Отображаем значение в панели инструментов
-        }
-    });
-});
-
 
 // Функция для форматирования timestamp в hh:mm dd.mm.yyyy
 function formatTimestamp(timestamp) {
@@ -1056,3 +1041,121 @@ function unsetFaded(element_id) {
     const el = document.getElementById(element_id);
     el.classList.remove('faded');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Параметры
+    const params = ['mood', 'energy', 'sociality', 'anxiety', 'impulsivity'];
+
+    // Загружаем последний записанный дельты из localStorage
+    let paramChanges = JSON.parse(localStorage.getItem('paramChanges')) || {
+        mood: 0,
+        energy: 0,
+        sociality: 0,
+        anxiety: 0,
+        impulsivity: 0
+    };
+
+    // Получаем последнее абсолютное состояние параметров
+    let lastValues = getSlidersValues();
+    // Если нет записей, то установим базовое значение 0 для всех
+    if (Object.keys(lastValues).length === 0) {
+        lastValues = {
+            mood: 0,
+            energy: 0,
+            sociality: 0,
+            anxiety: 0,
+            impulsivity: 0
+        };
+    }
+
+    const labelMood = document.getElementById('mood-label');
+    const labelEnergy = document.getElementById('energy-label');
+    const labelSociality = document.getElementById('sociality-label');
+    const labelAnxiety = document.getElementById('anxiety-label');
+    const labelImpulsivity = document.getElementById('impulsivity-label');
+
+    labelMood.textContent = `Настроение: ${lastValues.mood}`;
+    labelEnergy.textContent = `Энергия: ${lastValues.energy}`;
+    labelSociality.textContent = `Социальность: ${lastValues.sociality}`;
+    labelAnxiety.textContent = `Тревожность: ${lastValues.anxiety}`;
+    labelImpulsivity.textContent = `Зов срыва: ${lastValues.impulsivity}`;
+
+    // Функция установки выделенной кнопки
+    function setSelectedButton(param, delta) {
+        const container = document.querySelector(`.change-buttons[data-param="${param}"]`);
+        if (!container) return;
+        container.querySelectorAll('.change-button').forEach(btn => {
+            btn.classList.remove('selected');
+            if (btn.getAttribute('data-delta') == delta) {
+                btn.classList.add('selected');
+            }
+        });
+    }
+
+    // Инициализируем кнопки для каждого параметра
+    params.forEach(param => {
+        setSelectedButton(param, paramChanges[param]);
+    });
+
+    // Назначаем обработчики нажатий
+    document.querySelectorAll('.change-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const delta = parseInt(this.getAttribute('data-delta'));
+            const param = this.parentElement.getAttribute('data-param');
+            paramChanges[param] = delta;
+            localStorage.setItem('paramChanges', JSON.stringify(paramChanges));
+            setSelectedButton(param, delta);
+        });
+    });
+
+    // Проверяем можно ли сохранять
+    const saveButton = document.getElementById('save-button');
+    if (canSaveSliders()) {
+        saveButton.disabled = false;
+        if (shouldSaveSliders()) {
+            setFaded('save-button');
+        }
+    }
+
+    saveButton.addEventListener('click', function() {
+        const timestamp = Math.floor(Date.now() / 1000);
+
+        // Получаем последнее абсолютное состояние параметров
+        let lastValues = getSlidersValues();
+        // Если нет записей, то установим базовое значение 0 для всех
+        if (Object.keys(lastValues).length === 0) {
+            lastValues = {
+                mood: 0,
+                energy: 0,
+                sociality: 0,
+                anxiety: 0,
+                impulsivity: 0
+            };
+        }
+
+        // Вычисляем новые значения
+        const data = {};
+        params.forEach(param => {
+            const oldVal = lastValues[param] !== undefined ? lastValues[param] : 50;
+            const change = paramChanges[param] || 0;
+            data[param] = oldVal + change;
+        });
+
+        let records = JSON.parse(localStorage.getItem('records')) || [];
+        records.push({
+            time: timestamp,
+            data: data,
+            version: 2
+        });
+
+        localStorage.setItem('records', JSON.stringify(records));
+        localStorage.setItem('lastSaveTime', timestamp);
+        saveButton.disabled = true;
+        // Можно сбросить изменения или оставить их:
+        // paramChanges = {mood:0,energy:0,sociality:0,anxiety:0,impulsivity:0};
+        // localStorage.setItem('paramChanges', JSON.stringify(paramChanges));
+
+        location.reload();
+    });
+});
+

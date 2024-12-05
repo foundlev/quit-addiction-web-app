@@ -94,7 +94,7 @@ body, html {
     transition: transform 0.3s ease;
 }
 
-.medal:hover {
+.medal:active {
     transform: scale(1.1);
 }
 
@@ -181,7 +181,7 @@ body, html {
     transition: background-color 0.3s ease;
 }
 
-.parameter:hover {
+.parameter:active {
     background-color: #f0f0f0;
 }
 
@@ -241,7 +241,7 @@ body, html {
     cursor: pointer;
 }
 
-.close-button:hover {
+.close-button:active {
     color: #000;
 }
 
@@ -328,7 +328,7 @@ italic {
     .close-button {
         color: #E1E1E1;
     }
-    .close-button:hover {
+    .close-button:active {
         color: #fff;
     }
 }
@@ -344,7 +344,7 @@ italic {
     cursor: pointer;
 }
 
-.apply-button:hover {
+.apply-button:active {
     background-color: #365ac9;
 }
 
@@ -372,7 +372,7 @@ italic {
         background-color: #BB86FC;
     }
 
-    .apply-button:hover {
+    .apply-button:active {
         background-color: #9c6dd0;
     }
 }
@@ -398,7 +398,7 @@ italic {
     border-color: #365ac9;
 }
 
-.penalty-option:hover {
+.penalty-option:active {
     background-color: #e0e7ff;
 }
 
@@ -415,7 +415,7 @@ italic {
     font-size: 20px;
 }
 
-.apply-button:hover {
+.apply-button:active {
     background-color: #365ac9;
 }
 
@@ -475,8 +475,8 @@ italic {
     top: -6px; /* Для Firefox */
 }
 
-.slider input[type="range"]::-webkit-slider-thumb:hover,
-.slider input[type="range"]::-moz-range-thumb:hover {
+.slider input[type="range"]::-webkit-slider-thumb:active,
+.slider input[type="range"]::-moz-range-thumb:active {
     background-color: #365ac9;
 }
 
@@ -546,13 +546,61 @@ italic {
     pointer-events: none; /* Полностью отключаем взаимодействие */
 }
 
+.change-container {
+    width: 80%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.change-row {
+    display: flex;
+    flex-direction: column; /* Размещаем метку и кнопки по вертикали */
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.change-row label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px; /* Отступ между названием параметра и кнопками */
+}
+
+.change-buttons {
+    display: flex;
+    width: 100%;
+    gap: 5px; /* Расстояние между кнопками */
+}
+
+.change-button {
+    flex: 1; /* Каждая кнопка растягивается равномерно, чтобы занять всю ширину */
+    text-align: center;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    color: #333;
+}
+
+.change-button.selected {
+    background-color: #4169E1;
+    color: #fff;
+}
+
+.change-button:active {
+    background-color: #e0e0e0;
+}
+
 /* Темная тема */
 @media (prefers-color-scheme: dark) {
     .sliders-container {
         color: #E1E1E1;
     }
 
-    .slider label {
+    .slider label, .change-row label {
         color: #ccc;
     }
 
@@ -566,8 +614,8 @@ italic {
         border-color: #fff;
     }
 
-    .slider input[type="range"]::-webkit-slider-thumb:hover,
-    .slider input[type="range"]::-moz-range-thumb:hover {
+    .slider input[type="range"]::-webkit-slider-thumb:active,
+    .slider input[type="range"]::-moz-range-thumb:active {
         background-color: #9c6dd0;
     }
 
@@ -586,6 +634,20 @@ italic {
     #save-button:active, #ai-advice-button:active {
         background-color: #9c6dd0;
     }
+
+    .change-button {
+        background: #444; /* Тёмный фон для кнопок в тёмной теме */
+        color: #E1E1E1;   /* Светлый текст на тёмном фоне */
+    }
+
+    .change-button:active {
+        background-color: #555; /* Ещё более тёмный оттенок при наведении */
+    }
+
+    .change-button.selected {
+        background-color: #BB86FC; /* Фирменный фиолетовый оттенок для выделения */
+        color: #1e1e1e;  /* Тёмный текст на ярком фиолетовом фоне для контраста */
+    }
 }
 
 
@@ -597,7 +659,7 @@ italic {
         color: #E1E1E1;
     }
 
-    .penalty-option:hover {
+    .penalty-option:active {
         background-color: #333;
     }
 
@@ -611,7 +673,7 @@ italic {
         background-color: #BB86FC;
     }
 
-    .apply-button:hover {
+    .apply-button:active {
         background-color: #9c6dd0;
     }
 }
@@ -629,7 +691,7 @@ italic {
         border: 1px solid #444;
     }
 
-    .parameter:hover {
+    .parameter:active {
         background-color: #333;
     }
 

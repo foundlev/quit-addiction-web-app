@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="assets/icons/quit_512.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-...ваш_хэш..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="content-container">
@@ -50,33 +51,64 @@
             </div>
         </div>
 
-        <div class="sliders-container">
-            <form id="sliders-form">
-                <div class="slider">
-                    <label for="mood-slider">Настроение:</label>
-                    <input type="range" id="mood-slider" name="mood" min="1" max="5" value="3">
-                    <span id="mood-value">3</span>
+        <div class="change-container">
+            <form id="change-form">
+
+                <div class="change-row">
+                    <label id="mood-label">Настроение:</label>
+                    <div class="change-buttons" data-param="mood">
+                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
+                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
+                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
+                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="energy-slider">Энергия:</label>
-                    <input type="range" id="energy-slider" name="energy" min="1" max="5" value="3">
-                    <span id="energy-value">3</span>
+
+                <div class="change-row">
+                    <label id="energy-label">Энергия:</label>
+                    <div class="change-buttons" data-param="energy">
+                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
+                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
+                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
+                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="sociality-slider">Социальность:</label>
-                    <input type="range" id="sociality-slider" name="sociality" min="1" max="5" value="3">
-                    <span id="sociality-value">3</span>
+
+                <div class="change-row">
+                    <label id="sociality-label">Социальность:</label>
+                    <div class="change-buttons" data-param="sociality">
+                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
+                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
+                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
+                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="anxiety-slider">Тревожность:</label>
-                    <input type="range" id="anxiety-slider" name="anxiety" min="1" max="5" value="3">
-                    <span id="anxiety-value">3</span>
+
+                <div class="change-row">
+                    <label id="anxiety-label">Тревожность:</label>
+                    <div class="change-buttons" data-param="anxiety">
+                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
+                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
+                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
+                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
+                    </div>
                 </div>
-                <div class="slider">
-                    <label for="impulsivity-slider">Зов срыва:</label>
-                    <input type="range" id="impulsivity-slider" name="impulsivity" min="1" max="5" value="3">
-                    <span id="impulsivity-value">3</span>
+
+                <div class="change-row">
+                    <label id="impulsivity-label">Зов срыва:</label>
+                    <div class="change-buttons" data-param="impulsivity">
+                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
+                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
+                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
+                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
+                    </div>
                 </div>
+
                 <div class="main-buttons">
                     <button type="button" id="save-button" disabled>Сохранить</button>
                     <button type="button" id="ai-advice-button">✨AI</button>
