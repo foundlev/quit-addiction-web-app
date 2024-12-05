@@ -594,38 +594,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateImages(mediaQuery); // Вызываем функцию для первоначальной установки изображений в зависимости от текущей темы
     updateTheme(mediaQuery);
 
-    // Переменные для отслеживания жестов
-    let touchStartY = 0;
-    let touchEndY = 0;
-
-    const refreshIndicator = document.createElement('div');
-    refreshIndicator.className = 'refresh-indicator';
-    refreshIndicator.textContent = 'Перезагрузка...';
-    document.body.appendChild(refreshIndicator);
-
-    document.addEventListener('touchstart', function(event) {
-        touchStartY = event.touches[0].clientY;
-    });
-
-    document.addEventListener('touchmove', function(event) {
-        touchEndY = event.touches[0].clientY;
-        if (touchEndY > touchStartY + 100) {
-            refreshIndicator.style.display = 'block';
-        }
-    });
-
-    document.addEventListener('touchend', function() {
-        if (touchEndY > touchStartY + 100) {
-            setTimeout(function() {
-                location.reload();
-            }, 500); // Ждем завершения анимации перед перезагрузкой страницы
-        } else {
-            refreshIndicator.style.display = 'none';
-        }
-        touchStartY = 0;
-        touchEndY = 0;
-    });
-
     // Обработчик события для кнопки "infoButton"
     infoButton.addEventListener('click', function() {
         // Получаем название текущей стадии из элемента с id="timer"
