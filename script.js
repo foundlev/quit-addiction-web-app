@@ -1223,3 +1223,79 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('records', JSON.stringify(newRecords));
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Получаем элементы модального окна комментариев
+    const commentButton = document.getElementById('comment-button');
+    const commentModal = document.getElementById('commentModal');
+    const closeCommentModal = document.getElementById('closeCommentModal');
+    const saveCommentButton = document.getElementById('saveCommentButton');
+    const cancelCommentButton = document.getElementById('cancelCommentButton');
+    const commentTextarea = document.getElementById('commentTextarea');
+
+    // Функция для открытия модального окна комментариев
+    function openCommentModal() {
+        commentTextarea.value = ''; // Очищаем поле ввода
+        commentModal.classList.remove('hidden');
+        commentTextarea.focus();
+    }
+
+    // Функция для закрытия модального окна комментариев
+    function closeModalWindow() {
+        commentModal.classList.add('hidden');
+    }
+
+    // Обработчик нажатия на кнопку комментария
+    if (commentButton) {
+        commentButton.addEventListener('click', openCommentModal);
+    }
+
+    // Обработчики закрытия модального окна
+    if (closeCommentModal) {
+        closeCommentModal.addEventListener('click', closeModalWindow);
+    }
+
+    if (cancelCommentButton) {
+        cancelCommentButton.addEventListener('click', closeModalWindow);
+    }
+
+    // Обработчик сохранения комментария
+    if (saveCommentButton) {
+        saveCommentButton.addEventListener('click', function() {
+            const commentText = commentTextarea.value.trim();
+            if (commentText === '') {
+                alert('Комментарий не может быть пустым.');
+                return;
+            }
+
+            const timestamp = Math.floor(Date.now() / 1000); // Текущий timestamp в секундах
+
+            // Получаем существующие комментарии из localStorage
+            let quitComments = JSON.parse(localStorage.getItem('quitComments')) || [];
+
+            // Создаем новый комментарий
+            const newComment = {
+                timestamp: timestamp,
+                comment: commentText
+            };
+
+            // Добавляем новый комментарий в список
+            quitComments.push(newComment);
+
+            // Сохраняем обновленный список обратно в localStorage
+            localStorage.setItem('quitComments', JSON.stringify(quitComments));
+
+            // Закрываем модальное окно и информируем пользователя
+            closeModalWindow();
+
+            // Опционально: обновить UI для отображения новых комментариев
+            // Например, вызвать функцию для перерисовки списка комментариев
+        });
+    }
+
+    // Закрытие модального окна при клике вне его области
+    window.addEventListener('click', function(event) {
+        if (event.target === commentModal) {
+            closeModalWindow();
+        }
+    });
+});

@@ -740,3 +740,117 @@ italic {
         background-color: #424242;
     }
 }
+
+/* Стили для модального окна комментариев */
+#commentModal .modal-content {
+    width: 90%;
+    max-width: 500px;
+}
+
+#saveCommentButton {
+    flex: 3;
+}
+
+#cancelCommentButton {
+    flex: 1;
+}
+
+#commentTextarea {
+    width: 100%;
+    font-family: monospace;
+    resize: vertical;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#commentTextarea:focus {
+    outline: none;
+    border-color: #4169E1;
+    box-shadow: 0 0 5px rgba(65, 105, 225, 0.5);
+}
+
+.comment-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-buttons button {
+    padding: 10px 20px;
+    background-color: #4169E1;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.comment-buttons button:hover {
+    background-color: #365ac9;
+}
+
+.comment-buttons button:active {
+    background-color: #365ac9;
+}
+
+.comment-buttons button#cancelCommentButton {
+    background-color: #ccc;
+    color: #333;
+}
+
+.comment-buttons button#cancelCommentButton:hover {
+    background-color: #bbb;
+}
+
+.comment-buttons button#cancelCommentButton:active {
+    background-color: #bbb;
+}
+
+/* Темная тема для модального окна комментариев */
+@media (prefers-color-scheme: dark) {
+    #commentModal .modal-content {
+        background-color: #1e1e1e;
+        color: #E1E1E1;
+    }
+
+    #commentTextarea {
+        background-color: #2c2c2c;
+        color: #E1E1E1;
+        border: 1px solid #444;
+    }
+
+    #commentTextarea:focus {
+        border-color: #BB86FC;
+        box-shadow: 0 0 5px rgba(187, 134, 252, 0.5);
+    }
+
+    .comment-buttons button {
+        background-color: #BB86FC;
+    }
+
+    .comment-buttons button:hover {
+        background-color: #9c6dd0;
+    }
+
+    .comment-buttons button:active {
+        background-color: #9c6dd0;
+    }
+
+    .comment-buttons button#cancelCommentButton {
+        background-color: #555;
+        color: #E1E1E1;
+    }
+
+    .comment-buttons button#cancelCommentButton:hover {
+        background-color: #444;
+    }
+
+    .comment-buttons button#cancelCommentButton:active {
+        background-color: #444;
+    }
+}

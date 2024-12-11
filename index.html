@@ -137,6 +137,18 @@
             <button id="applyPenaltyButton" class="apply-button">Применить</button>
         </div>
     </div>
+    <!-- Модальное окно для комментариев -->
+    <div id="commentModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeCommentModal" class="close-button">&times;</span>
+            <h2>Добавить комментарий</h2>
+            <textarea id="commentTextarea" rows="5" placeholder="Введите ваш комментарий..."></textarea>
+            <div class="comment-buttons">
+                <button id="saveCommentButton">Сохранить</button>
+                <button id="cancelCommentButton">Отмена</button>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
