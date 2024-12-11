@@ -499,10 +499,10 @@ italic {
     justify-content: space-between;
 }
 
-#save-button, #ai-advice-button {
+#save-button, #ai-advice-button, #comment-button {
     margin-top: 5px;
     padding: 15px;
-    width: 68%;
+    width: 48%;
     background-color: #4169E1;
     color: #fff;
     border: none;
@@ -530,15 +530,15 @@ italic {
     box-shadow: 0 4px 15px rgba(65, 105, 225, 0.6);
 }
 
-#ai-advice-button {
-    width: 30%;
+#ai-advice-button, #comment-button {
+    width: 24%;
 }
 
-#save-button:active, #ai-advice-button:active {
+#save-button:active, #ai-advice-button:active, #comment-button:active {
     background-color: #365ac9;
 }
 
-#save-button:disabled, #ai-advice-button:disabled {
+#save-button:disabled, #ai-advice-button:disabled, #comment-button:disabled {
     background-color: #cccccc; /* Цвет для отключенной кнопки */
     color: #666666; /* Цвет текста */
     cursor: not-allowed; /* Курсор запрещён */
@@ -627,11 +627,11 @@ italic {
         color: #bbb;
     }
 
-    #save-button, #ai-advice-button {
+    #save-button, #ai-advice-button, #comment-button {
         background-color: #BB86FC;
     }
 
-    #save-button:active, #ai-advice-button:active {
+    #save-button:active, #ai-advice-button:active, #comment-button:active {
         background-color: #9c6dd0;
     }
 
