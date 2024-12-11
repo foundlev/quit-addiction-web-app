@@ -966,6 +966,8 @@ document.addEventListener('DOMContentLoaded', function() {
         penalties = JSON.parse(localStorage.getItem('penaltyList')) || [];
         // Получаем записи оценки.
         records = JSON.parse(localStorage.getItem('records')) || [];
+        // Получаем пользовательские заметки.
+        userNotes = JSON.parse(localStorage.getItem('quitComments')) || [];
 
         // Преобразуем список в текстовый формат
         const text_1 = "\nОтмеченные отрицательные действия (последние 30):\n" + penalties.slice(-30).map(item => {
@@ -978,11 +980,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Получаем текущее время с последнего срыва.
         const text_3 = `Прошло времени с последнего полного срыва (дни:часы:минуты:секунды): ${formatTime(calculateElapsedTime())}\n`;
 
-        const text_4 = "\nЕжедневные оценки пяти параметров (последние 30 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-30).map(item => {
+        const text_4 = "\nЕжедневные оценки пяти параметров (последние 60 дней, могут быть пропуски. Сокращения: настроение - m, энергия - e, социальность - s, тревожность - a, зов срыва - i):\n" + records.slice(-60).map(item => {
             return `Дата: ${formatTimestamp(item.time * 1000)} Оценки. m: ${item.data.mood}, e: ${item.data.energy}, s: ${item.data.sociality}, a: ${item.data.anxiety}, i: ${item.data.impulsivity}`;
         }).join('\n') + "\n";
 
-        const queryText = text_2 + text_3 + text_1 + text_4;
+        const text_5 = "\nМои заметки (последние 30 дней,формат: дата, текст заметки)\n" + userNotes.slice(-30).map(item => {
+            return `Дата: ${formatTimestamp(item.timestamp * 1000)} Заметка: ${item.comment}`;
+        }).join('\n') + "\n";
+
+        const queryText = text_2 + text_3 + text_1 + text_4 + text_5;
 
         const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
         const data = {
