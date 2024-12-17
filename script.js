@@ -6,6 +6,13 @@ function formatTime(ms) {
     return `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+let prompt_1 = null;
+fetch('assets/prompt.txt').then(response => response.text()).then(text => {
+	prompt_1 = text;
+}).catch(error => {
+	console.error('Error fetching prompt.txt:', error);
+});
+
 function calculateElapsedTime() {
     let startTime = localStorage.getItem('startTime');
     if (!startTime) {
@@ -422,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             timerElement.innerHTML = `${formatTime(elapsedTime)}<br>${message}`;
-            progressBar.style.width = `${elapsedPercentage}%`;
+//            progressBar.style.width = `${elapsedPercentage}%`;
 
         }, 1000);
     }
@@ -968,6 +975,7 @@ document.addEventListener('DOMContentLoaded', function() {
         records = JSON.parse(localStorage.getItem('records')) || [];
         // Получаем пользовательские заметки.
         userNotes = JSON.parse(localStorage.getItem('quitComments')) || [];
+        const quitRates = JSON.parse(localStorage.getItem('quitRates')) || [];
 
         // Преобразуем список в текстовый формат
         const text_1 = "\nОтмеченные отрицательные действия (последние 30):\n" + penalties.slice(-30).map(item => {
@@ -988,11 +996,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return `Дата: ${formatTimestamp(item.timestamp * 1000)} Заметка: ${item.comment}`;
         }).join('\n') + "\n";
 
-        const queryText = text_2 + text_3 + text_1 + text_4 + text_5;
+        const text_6 = "\nИстория твоих оценок моего восстановления (которые ты ставишь в поле rate):\n" + quitRates.slice(-30).map(item => {
+            return `Дата: ${formatTimestamp(item.time * 1000)} Оценка: ${item.rate}`;
+        }).join('\n') + "\n";
+
+        const queryText = text_2 + text_3 + text_1 + text_4 + text_5 + text_6;
 
         const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
         const data = {
             password: getPassword(),
+            prompt: prompt_1,
             text: queryText
         };
 
@@ -1009,10 +1022,30 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             if (result.choices) {
                 // Извлекаем текст ответа и отображаем его в модальном окне
-                const responseText = result.choices[0].message.content;
-                // Сохраняем ответ в localStorage
-                localStorage.setItem('aiResponse', responseText);
-                showModal("Ответ", responseText);
+                const content = result.choices[0].message.content;
+
+                const contentJson = content.replace('```json', '').replace('```', '').replace(/'/g, '"');;
+
+                // Проверяем, что это валидный JSON
+                let parsedS = JSON.parse(contentJson);
+
+                if (parsedS.text && parsedS.rate) {
+                    localStorage.setItem('aiResponse', parsedS.text);
+
+                    let quitRates = JSON.parse(localStorage.getItem('quitRates')) || [];
+                    quitRates.push({
+                        rate: parsedS.rate,
+                        time: Math.floor(Date.now() / 1000)
+                    });
+                    localStorage.setItem('quitRates', JSON.stringify(quitRates));
+                    showModal("Ответ", parsedS.text);
+
+                    updateRate();
+
+                } else {
+                    showModal("Ошибка", "Не удалось получить текст ответа.");
+                }
+
             } else if (result.error) {
                 // Отображаем модальное окно с текстом ошибки
                 showModal("Ошибка", result.error);
@@ -1304,4 +1337,20 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModalWindow();
         }
     });
+
+    updateRate();
 });
+
+function updateRate() {
+    quitRates = JSON.parse(localStorage.getItem('quitRates')) || [];
+    // Если quitRates пустое, то return
+    if (quitRates.length === 0) {
+        return;
+    }
+
+    // Пример: [{"rate":30,"time":1734476298},{"rate":35,"time":1734476326}]
+    // Находим самое новое значение
+    const latestRate = quitRates.reduce((max, current) => Math.max(max, current.rate), 0);
+    document.getElementById('progress-bar').style.width = `${latestRate}%`;
+    document.getElementById('percentage').textContent = `${latestRate}%`;
+}
