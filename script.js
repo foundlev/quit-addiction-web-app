@@ -62,6 +62,19 @@ function savePassword(newPassword) {
     localStorage.setItem('quitAppPassword', newPassword);
 }
 
+
+
+// Добавляем функцию для отображения модального окна
+function showModal(title, description, extraHtml = '') {
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+
+    modalTitle.textContent = title;
+    modalDescription.innerHTML = description + extraHtml;
+    modal.classList.remove('hidden');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Если пароль не сохранен, то требуем ввести его.
     if (!getPassword()) {
@@ -916,13 +929,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Добавляем функцию для отображения модального окна
-    function showModal(title, description) {
-        modalTitle.textContent = title;
-        modalDescription.innerHTML = description;
-        modal.classList.remove('hidden');
-    }
-
     // Функция для отображения модального окна с загрузкой
     function showLoadingModal() {
         modalTitle.textContent = 'Пожалуйста, подождите...';
@@ -948,7 +954,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loadPrevious').addEventListener('click', function() {
             modal.classList.add('hidden'); // Закрываем окно выбора
             const responseText = localStorage.getItem('aiResponse');
-            showModal('Ответ', responseText);
+
+            askButtonDisabled = canAnswerQuestion() ? '' : 'disabled';
+            const extraHtml = `
+            <div class="choice-buttons">
+                <button id="askQues" class="choice-button" ${askButtonDisabled}>Ответить на вопросы</button>
+            </div>
+            `;
+            showModal('Ответ', responseText, extraHtml);
+
+            bindQuestionButtons();
         });
 
         // Обработчик для получения нового ответа
@@ -976,6 +991,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Получаем пользовательские заметки.
         userNotes = JSON.parse(localStorage.getItem('quitComments')) || [];
         const quitRates = JSON.parse(localStorage.getItem('quitRates')) || [];
+        const quitQuestions = JSON.parse(localStorage.getItem('quitQuestions')) || [];
 
         // Преобразуем список в текстовый формат
         const text_1 = "\nОтмеченные отрицательные действия (последние 30):\n" + penalties.slice(-30).map(item => {
@@ -1000,7 +1016,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return `Дата: ${formatTimestamp(item.time * 1000)} Оценка: ${item.rate}`;
         }).join('\n') + "\n";
 
-        const queryText = text_2 + text_3 + text_1 + text_4 + text_5 + text_6;
+        const text_7 = "\nИстория моих ответов на твои вопросы:\n" + quitQuestions.slice(-30).map(item => {
+            return `Дата: ${formatTimestamp(item.time * 1000)} Вопрос: ${item.question} Ответ: ${item.answer}`;
+        }).join('\n') + "\n";
+
+        const queryText = text_2 + text_3 + text_1 + text_4 + text_5 + text_6 + text_7;
 
         const url = "https://myapihelper.na4u.ru/quit_app/ai_quit.php";
         const data = {
@@ -1038,10 +1058,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         time: Math.floor(Date.now() / 1000)
                     });
                     localStorage.setItem('quitRates', JSON.stringify(quitRates));
-                    showModal("Ответ", parsedS.text);
 
+                    let quitQuestions = JSON.parse(localStorage.getItem('quitQuestions')) || [];
+                    // Удаляем словари, где answer = null
+                    quitQuestions = quitQuestions.filter(item => item.answer!== null);
+
+                    const inputQuestions = parsedS.questions;
+                    // Записываем вопросы через forEach
+                    inputQuestions.forEach(question => {
+                        quitQuestions.push({
+                            question: question,
+                            answer: null,
+                            time: Math.floor(Date.now() / 1000)
+                        });
+                    });
+                    localStorage.setItem('quitQuestions', JSON.stringify(quitQuestions));
+
+                    askButtonDisabled = canAnswerQuestion() ? '' : 'disabled';
+                    const extraHtml = `
+                    <div class="choice-buttons">
+                        <button id="askQues" class="choice-button" ${askButtonDisabled}>Ответить на вопросы</button>
+                    </div>
+                    `;
+                    showModal("Ответ", parsedS.text, extraHtml);
                     updateRate();
 
+                    bindQuestionButtons();
                 } else {
                     showModal("Ошибка", "Не удалось получить текст ответа.");
                 }
@@ -1353,4 +1395,92 @@ function updateRate() {
     const latestRate = quitRates.reduce((max, current) => Math.max(max, current.rate), 0);
     document.getElementById('progress-bar').style.width = `${latestRate}%`;
     document.getElementById('percentage').textContent = `${latestRate}%`;
+}
+
+function canAnswerQuestion() {
+    // Получаем вопросы из localStorage
+    const quitQuestions = JSON.parse(localStorage.getItem('quitQuestions')) || [];
+
+    // Фильтруем вопросы без ответа
+    const unansweredQuestions = quitQuestions.filter(q => q.answer === null);
+
+    // Ограничиваем количество вопросов до 4
+    const questionsToDisplay = unansweredQuestions.slice(0, 4);
+
+    // Если вопросы существуют то true
+    return questionsToDisplay.length > 0;
+}
+
+function bindQuestionButtons() {
+    const askQuesButton = document.getElementById('askQues');
+
+    // Обработчик клика на кнопку "askQues"
+    askQuesButton.addEventListener('click', function () {
+        // Получаем вопросы из localStorage
+        const quitQuestions = JSON.parse(localStorage.getItem('quitQuestions')) || [];
+
+        // Фильтруем вопросы без ответа
+        const unansweredQuestions = quitQuestions.filter(q => q.answer === null);
+
+        // Ограничиваем количество вопросов до 4
+        const questionsToDisplay = unansweredQuestions.slice(0, 4);
+
+        // Очищаем содержимое модального окна
+        let queHTML = '';
+
+        // Если нет вопросов для отображения
+        if (questionsToDisplay.length === 0) {
+            queHTML += `<p>Нет доступных вопросов.</p>`;
+        } else {
+            // Добавляем вопросы в модальное окно
+            questionsToDisplay.forEach((q, index) => {
+                queHTML += `
+                    <div class="question-container">
+                        <p>${q.question}</p>
+                        <textarea data-index="${index}" class="answer-input" rows="3" placeholder="Введите ваш ответ..."></textarea>
+                    </div>
+                `;
+            });
+
+            // Добавляем кнопку "Сохранить"
+            queHTML += `
+                <button id="saveAnswers" class="apply-button">Сохранить</button>
+            `;
+        }
+
+        // Показать модальное окно
+        showModal('Ответы на вопросы', '', queHTML);
+
+        // Закрытие модального окна
+//        document.getElementById('closeModal').addEventListener('click', function () {
+//            closeModal();
+//        });
+
+        // Сохранение ответов
+        const saveButton = document.getElementById('saveAnswers');
+        if (saveButton) {
+            saveButton.addEventListener('click', function () {
+                saveButton.disabled = true;
+
+                const inputs = document.querySelectorAll('.answer-input');
+                inputs.forEach(input => {
+                    const index = parseInt(input.getAttribute('data-index'), 10);
+                    if (input.value.trim() !== '') {
+                        unansweredQuestions[index].answer = input.value.trim();
+                    }
+                });
+
+                // Сохраняем обновленные вопросы обратно в localStorage
+                const updatedQuestions = quitQuestions.map(q =>
+                    unansweredQuestions.find(qa => qa.question === q.question) || q
+                );
+                localStorage.setItem('quitQuestions', JSON.stringify(updatedQuestions));
+
+                location.reload();
+
+//                // Закрываем модальное окно
+//                closeModal();
+            });
+        }
+    });
 }

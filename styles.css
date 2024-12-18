@@ -283,6 +283,10 @@ italic {
     transition: background-color 0.3s ease;
 }
 
+#askQues {
+    width: 100%;
+}
+
 #loadPrevious {
     width: 57%;
 }
@@ -538,7 +542,7 @@ italic {
     background-color: #365ac9;
 }
 
-#save-button:disabled, #ai-advice-button:disabled, #comment-button:disabled {
+:disabled {
     background-color: #cccccc; /* Цвет для отключенной кнопки */
     color: #666666; /* Цвет текста */
     cursor: not-allowed; /* Курсор запрещён */
@@ -758,7 +762,7 @@ italic {
 #commentTextarea {
     width: 100%;
     font-family: monospace;
-    resize: vertical;
+    resize: none;
     padding: 10px;
     box-sizing: border-box;
     font-size: 20px;
@@ -854,3 +858,26 @@ italic {
         background-color: #444;
     }
 }
+
+.question-container p {
+    font-weight: bold;
+}
+
+.answer-input {
+    width: 100%; /* Полная ширина */
+    box-sizing: border-box; /* Учёт границ и padding в общей ширине */
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none; /* Разрешаем вертикальное изменение размера */
+    font-family: monospace;
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: #4169E1; /* Цвет границы при фокусе */
+    box-shadow: 0 0 5px rgba(65, 105, 225, 0.5);
+}
+
+

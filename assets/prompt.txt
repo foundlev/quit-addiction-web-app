@@ -13,7 +13,9 @@ Please use only the data I provide to tailor your response.
 You can use the <bold></bold> tag to bold text and <italic></italic> to italicize text and display it with a different color background.
 Do not forget to separate the text into paragraphs using the <p> tag to improve readability.
 
+Additionally, please include 2-4 personalized questions in Russian that I can reflect on or answer to gain better insights into my progress. Make these questions based on the data I have provided, trends in my characteristics, answers to past questions, and my notes. The questions should not involve large and detailed answers.
+
 return result in json format:
-{'text': '<str:Description Text>', 'rate': <int: my progress rate>}
+{'text': '<str:Description Text>', 'rate': <int: my progress rate>, 'questions': ['Question1', 'Question2']}
 
 Write JSON in one string, Use single quotes in json. Use plain text in JSON, do not use such like ```json.
