@@ -859,10 +859,6 @@ italic {
     }
 }
 
-.question-container p {
-    font-weight: bold;
-}
-
 .answer-input {
     width: 100%; /* Полная ширина */
     box-sizing: border-box; /* Учёт границ и padding в общей ширине */
@@ -872,6 +868,7 @@ italic {
     border-radius: 5px;
     resize: none; /* Разрешаем вертикальное изменение размера */
     font-family: monospace;
+    min-height: 100px;
 }
 
 .answer-input:focus {

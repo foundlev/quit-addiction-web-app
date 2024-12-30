@@ -1392,7 +1392,12 @@ function updateRate() {
 
     // Пример: [{"rate":30,"time":1734476298},{"rate":35,"time":1734476326}]
     // Находим самое новое значение
-    const latestRate = quitRates.reduce((max, current) => Math.max(max, current.rate), 0);
+    const latestEntry = quitRates.reduce((latest, current) =>
+    current.time > latest.time ? current : latest, quitRates[0]);
+
+    // Берем значение `rate` из этого объекта
+    const latestRate = latestEntry.rate;
+
     document.getElementById('progress-bar').style.width = `${latestRate}%`;
     document.getElementById('percentage').textContent = `${latestRate}%`;
 }
