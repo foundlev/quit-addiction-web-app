@@ -3,152 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quit Addiction App</title>
-    <link rel="icon" type="image/svg+xml" href="assets/quit.svg">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="assets/icons/quit_512.svg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-...ваш_хэш..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Таймер преодоления зависимости</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #6d28d9;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --border: #d1d5db;
+            --radius: 16px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0f172a;
+                --surface: #1e293b;
+                --text: #f8fafc;
+                --text-secondary: #94a3b8;
+                --border: #334155;
+                --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            }
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: var(--transition);
+        }
+        body {
+            background: var(--background);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card header {
+            margin-bottom: 1.5rem;
+        }
+        .card header i {
+            font-size: 3rem;
+            color: var(--primary);
+            animation: popIn 0.5s ease;
+        }
+        .timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease;
+        }
+        .motivation {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            animation: fadeIn 1.5s ease;
+        }
+        .progress-container {
+            background: var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            height: 14px;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 100%;
+            width: 0;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-    <div class="content-container">
-        <div id="quoteContainer" class="quote-container hidden">Загрузка цитаты...</div>
-        <div class="button-and-timer-container">
-            <button id="settingsButton"><img src="assets/settings.svg" data-light="assets/settings.svg" data-dark="assets/settings_dark.svg" alt="Settings"></button>
-            <button id="resetButton"><img src="assets/edit.svg" data-light="assets/edit.svg" data-dark="assets/edit_dark.svg" alt="Reset"></button>
-            <button id="infoButton"><img src="assets/info.svg" data-light="assets/info.svg" data-dark="assets/info_dark.svg" alt="Info"></button>
-            <div class="container">
-                <p id="timer">XX:XX:XX:XX<br>Загрузка...</p>
-                <div class="progress-container">
-                    <div id="progress-bar"></div>
-                    <span id="percentage"></span>
-                </div>
-            </div>
-        </div>
-        <div class="parameters-container hidden">
-            <div class="parameter">
-                <span class="parameter-label">Тревожность:</span>
-                <span id="anxiety-level" class="parameter-value">-</span>
-            </div>
-            <div class="parameter">
-                <span class="parameter-label">Социальность:</span>
-                <span id="sociality-level" class="parameter-value">-</span>
-            </div>
-            <div class="parameter">
-                <span class="parameter-label">Настроение:</span>
-                <span id="mood-quality" class="parameter-value">-</span>
-            </div>
-            <div class="parameter">
-                <span class="parameter-label">Зов срыва:</span>
-                <span id="impulsivity-level" class="parameter-value">-</span>
-            </div>
-            <div class="parameter">
-                <span class="parameter-label">Энергия:</span>
-                <span id="energy-level" class="parameter-value">-</span>
-            </div>
-        </div>
-
-        <div class="change-container">
-            <form id="change-form">
-
-                <div class="change-row">
-                    <label id="mood-label">Настроение:</label>
-                    <div class="change-buttons" data-param="mood">
-                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
-                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
-                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
-                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
-                    </div>
-                </div>
-
-                <div class="change-row">
-                    <label id="energy-label">Энергия:</label>
-                    <div class="change-buttons" data-param="energy">
-                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
-                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
-                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
-                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
-                    </div>
-                </div>
-
-                <div class="change-row">
-                    <label id="sociality-label">Социальность:</label>
-                    <div class="change-buttons" data-param="sociality">
-                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
-                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
-                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
-                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
-                    </div>
-                </div>
-
-                <div class="change-row">
-                    <label id="anxiety-label">Тревожность:</label>
-                    <div class="change-buttons" data-param="anxiety">
-                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
-                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
-                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
-                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
-                    </div>
-                </div>
-
-                <div class="change-row">
-                    <label id="impulsivity-label">Зов срыва:</label>
-                    <div class="change-buttons" data-param="impulsivity">
-                        <button type="button" class="change-button" data-delta="-2"><i class="fa fa-angle-double-down"></i></button>
-                        <button type="button" class="change-button" data-delta="-1"><i class="fa fa-angle-down"></i></button>
-                        <button type="button" class="change-button" data-delta="0"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="change-button" data-delta="1"><i class="fa fa-angle-up"></i></button>
-                        <button type="button" class="change-button" data-delta="2"><i class="fa fa-angle-double-up"></i></button>
-                    </div>
-                </div>
-
-                <div class="main-buttons">
-                    <button type="button" id="save-button" disabled>Сохранить</button>
-                    <button type="button" id="comment-button"><i class="fa-solid fa-comment-dots"></i></button>
-                    <button type="button" id="ai-advice-button"><i class="fa-solid fa-lightbulb"></i></button>
-                </div>
-            </form>
-        </div>
-
-    </div>
-    <!-- Модальное окно -->
-    <div id="modal" class="modal hidden">
-        <div class="modal-content">
-            <span id="closeModal" class="close-button">&times;</span>
-            <h2 id="modalTitle">Стадия</h2>
-            <div id="modalDescription"></div>
+<div class="wrapper">
+    <div class="card">
+        <header>
+            <i class="fa-solid fa-fire"></i>
+        </header>
+        <div id="timer" class="timer">00:00:00</div>
+        <div id="motivation" class="motivation">Начни свое преображение!</div>
+        <div class="progress-container">
+            <div id="progress" class="progress-bar"></div>
         </div>
     </div>
-    <!-- Модальное окно для выбора штрафов -->
-    <div id="penaltyModal" class="modal hidden">
-        <div class="modal-content">
-            <span id="closePenaltyModal" class="close-button">&times;</span>
-            <h2>Выберите штрафы</h2>
-            <form id="penaltyForm">
-                <!-- Опции штрафов будут здесь -->
-            </form>
-            <button id="applyPenaltyButton" class="apply-button">Применить</button>
-        </div>
-    </div>
-    <!-- Модальное окно для комментариев -->
-    <div id="commentModal" class="modal hidden">
-        <div class="modal-content">
-            <span id="closeCommentModal" class="close-button">&times;</span>
-            <h2>Добавить комментарий</h2>
-            <textarea id="commentTextarea" rows="5" placeholder="Введите ваш комментарий..."></textarea>
-            <div class="comment-buttons">
-                <button id="saveCommentButton">Сохранить</button>
-                <button id="cancelCommentButton">Отмена</button>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
+</div>
+<script>
+    const quotes = [
+        "Каждая минута – шаг к свободе.",
+        "Ты сильнее своих зависимостей.",
+        "С каждым днём становишься лучше.",
+        "Стойкость – твоя главная сила.",
+        "Ты уже на пути к новой жизни.",
+        "Продолжай, и успех не заставит себя ждать.",
+        "Преодоление начинается с первого шага."
+    ];
+    const startTime = new Date("2025-03-26T10:00:00Z");
+    const totalDays = 30; // целевые 30 дней
+
+    function formatTime(seconds) {
+        const days = Math.floor(seconds / 86400);
+        const hours = String(Math.floor((seconds % 86400) / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        return `${days}:${hours}:${minutes}:${secs}`;
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        const elapsedSeconds = Math.floor((now - startTime) / 1000);
+        document.getElementById('timer').textContent = formatTime(elapsedSeconds);
+        const elapsedDays = elapsedSeconds / 86400;
+        const progressPercent = Math.min((elapsedDays / totalDays) * 100, 100);
+        document.getElementById('progress').style.width = progressPercent + '%';
+    }
+
+    function updateQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById('motivation').textContent = quotes[randomIndex];
+    }
+
+    updateTimer();
+    updateQuote();
+    setInterval(updateTimer, 1000);
+    setInterval(updateQuote, 12000);
+</script>
 </body>
 </html>
