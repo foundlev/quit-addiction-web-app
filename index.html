@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="assets/quit.svg">
-    <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -82,7 +81,7 @@
         .motivation {
             font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.0rem;
             animation: fadeIn 1.5s ease;
         }
         .progress-container {
@@ -95,6 +94,30 @@
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             height: 100%;
             width: 0;
+        }
+        .episode-display {
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        .btn-episode {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-episode:hover {
+            background: var(--secondary);
         }
         @keyframes popIn {
             0% {
@@ -110,6 +133,55 @@
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+        /* Стили модального окна */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+        .modal-actions {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-around;
+        }
+        .modal-btn {
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .modal-btn.cancel {
+            background: var(--border);
+            color: var(--text);
+        }
+        .modal-btn.confirm {
+            background: var(--primary);
+            color: #fff;
+        }
+        .modal-btn.cancel:hover {
+            background: var(--secondary);
+            color: #fff;
+        }
+        .modal-btn.confirm:hover {
+            background: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -123,8 +195,24 @@
         <div class="progress-container">
             <div id="progress" class="progress-bar"></div>
         </div>
+        <div id="episodeDisplay" class="episode-display">Количество приступов: 0</div>
+        <button id="episodeBtn" class="btn-episode">
+            <i class="fa-solid fa-bolt"></i> Зарегистрировать приступ
+        </button>
     </div>
 </div>
+
+<!-- Модальное окно для подтверждения регистрации приступа -->
+<div id="episodeModal" class="modal">
+    <div class="modal-content">
+        <p>Вы уверены, что хотите зарегистрировать приступ?</p>
+        <div class="modal-actions">
+            <button id="cancelEpisode" class="modal-btn cancel">Отмена</button>
+            <button id="confirmEpisode" class="modal-btn confirm">Подтвердить</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const quotes = [
         "Слабость — это выбор. Делай по-другому.",
@@ -170,7 +258,7 @@
     const totalDays = 8; // целевые 30 дней
 
     function formatTime(seconds) {
-        const days = Math.floor(seconds / 86400);
+        const days = String(Math.floor(seconds / 86400)).padStart(2, '0');
         const hours = String(Math.floor((seconds % 86400) / 3600)).padStart(2, '0');
         const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
         const secs = String(seconds % 60).padStart(2, '0');
@@ -195,6 +283,29 @@
     updateQuote();
     setInterval(updateTimer, 1000);
     setInterval(updateQuote, 12000);
+
+    // Обновление количества приступов из localStorage
+    function updateEpisodeDisplay() {
+        const count = localStorage.getItem("episodeCount") ? parseInt(localStorage.getItem("episodeCount"), 10) : 0;
+        document.getElementById("episodeDisplay").textContent = "Количество приступов: " + count;
+    }
+    updateEpisodeDisplay();
+
+    document.getElementById("episodeBtn").addEventListener("click", function() {
+        document.getElementById("episodeModal").style.display = "flex";
+    });
+
+    document.getElementById("cancelEpisode").addEventListener("click", function() {
+        document.getElementById("episodeModal").style.display = "none";
+    });
+
+    document.getElementById("confirmEpisode").addEventListener("click", function() {
+        let count = localStorage.getItem("episodeCount") ? parseInt(localStorage.getItem("episodeCount"), 10) : 0;
+        count++;
+        localStorage.setItem("episodeCount", count);
+        updateEpisodeDisplay();
+        document.getElementById("episodeModal").style.display = "none";
+    });
 </script>
 </body>
 </html>
