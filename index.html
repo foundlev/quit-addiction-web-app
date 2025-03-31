@@ -95,12 +95,35 @@
             height: 100%;
             width: 0;
         }
-        .episode-display {
+        .fine-display {
             margin: 1rem 0;
             font-size: 1.1rem;
             color: var(--text-secondary);
         }
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
         .btn-episode {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-episode:active {
+            background: var(--secondary);
+        }
+        .btn-reset {
             margin-top: 1rem;
             width: 100%;
             padding: 0.75rem;
@@ -116,24 +139,17 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .btn-episode:hover {
+        .btn-reset:active {
             background: var(--secondary);
         }
         @keyframes popIn {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
-        /* Стили модального окна */
         .modal {
             position: fixed;
             top: 0;
@@ -175,12 +191,36 @@
             background: var(--primary);
             color: #fff;
         }
-        .modal-btn.cancel:hover {
+        .modal-btn.cancel:active {
             background: var(--secondary);
             color: #fff;
         }
-        .modal-btn.confirm:hover {
+        .modal-btn.confirm:active {
             background: var(--secondary);
+        }
+        .fine-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .fine-option {
+            background: var(--border);
+            color: var(--text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .fine-option:active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .fine-option.selected {
+            background: var(--primary);
+            color: #fff;
         }
     </style>
 </head>
@@ -195,20 +235,47 @@
         <div class="progress-container">
             <div id="progress" class="progress-bar"></div>
         </div>
-        <div id="episodeDisplay" class="episode-display">Количество приступов: 0</div>
-        <button id="episodeBtn" class="btn-episode">
-            <i class="fa-solid fa-bolt"></i> Зарегистрировать приступ
+        <div id="fineDisplay" class="fine-display">Штрафы: 0</div>
+        <div class="button-group">
+            <button id="thoughtBtn" class="btn-episode">
+                <i class="fa-solid fa-brain"></i> Мысли
+            </button>
+            <button id="touchBtn" class="btn-episode">
+                <i class="fa-solid fa-hand-sparkles"></i> Касание
+            </button>
+            <button id="toxicBtn" class="btn-episode">
+                <i class="fa-solid fa-skull-crossbones"></i> Агрессия
+            </button>
+        </div>
+        <button id="resetFineBtn" class="btn-reset">
+            <i class="fa-solid fa-dumbbell"></i> Списать штрафы
         </button>
     </div>
 </div>
 
-<!-- Модальное окно для подтверждения регистрации приступа -->
 <div id="episodeModal" class="modal">
     <div class="modal-content">
-        <p>Вы уверены, что хотите зарегистрировать приступ?</p>
+        <p id="modalText">Вы уверены, что хотите зарегистрировать это?</p>
         <div class="modal-actions">
             <button id="cancelEpisode" class="modal-btn cancel">Отмена</button>
             <button id="confirmEpisode" class="modal-btn confirm">Подтвердить</button>
+        </div>
+    </div>
+</div>
+
+<div id="resetModal" class="modal">
+    <div class="modal-content">
+        <p>Выберите количество для списания:</p>
+        <div class="fine-options">
+            <button class="fine-option" data-value="5">5</button>
+            <button class="fine-option" data-value="10">10</button>
+            <button class="fine-option" data-value="15">15</button>
+            <button class="fine-option" data-value="20">20</button>
+            <button class="fine-option" data-value="25">25</button>
+        </div>
+        <div class="modal-actions">
+            <button id="cancelReset" class="modal-btn cancel">Отмена</button>
+            <button id="confirmReset" class="modal-btn confirm" disabled>Подтвердить</button>
         </div>
     </div>
 </div>
@@ -255,7 +322,7 @@
         "Ты либо хозяин своей жизни, либо её раб."
     ];
     const startTime = new Date("2025-03-29T22:21:00Z");
-    const totalDays = 8; // целевые 30 дней
+    const totalDays = 8;
 
     function formatTime(seconds) {
         const days = String(Math.floor(seconds / 86400)).padStart(2, '0');
@@ -279,32 +346,81 @@
         document.getElementById('motivation').textContent = quotes[randomIndex];
     }
 
+    function updateFineDisplay() {
+        const fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        document.getElementById("fineDisplay").textContent = `Штрафы: ${fine}`;
+    }
+
     updateTimer();
     updateQuote();
+    updateFineDisplay();
     setInterval(updateTimer, 1000);
     setInterval(updateQuote, 12000);
 
-    // Обновление количества приступов из localStorage
-    function updateEpisodeDisplay() {
-        const count = localStorage.getItem("episodeCount") ? parseInt(localStorage.getItem("episodeCount"), 10) : 0;
-        document.getElementById("episodeDisplay").textContent = "Количество приступов: " + count;
+    // Модальное окно для добавления штрафов
+    const episodeModal = document.getElementById("episodeModal");
+    const modalText = document.getElementById("modalText");
+    const cancelEpisodeBtn = document.getElementById("cancelEpisode");
+    const confirmEpisodeBtn = document.getElementById("confirmEpisode");
+
+    function showEpisodeModal(type, fineAmount) {
+        modalText.textContent = `Вы уверены, что хотите зарегистрировать "${type}"?`;
+        episodeModal.style.display = "flex";
+        confirmEpisodeBtn.onclick = () => {
+            let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+            fine += fineAmount;
+            localStorage.setItem("fineBalance", fine);
+            updateFineDisplay();
+            episodeModal.style.display = "none";
+        };
     }
-    updateEpisodeDisplay();
 
-    document.getElementById("episodeBtn").addEventListener("click", function() {
-        document.getElementById("episodeModal").style.display = "flex";
+    cancelEpisodeBtn.addEventListener("click", () => {
+        episodeModal.style.display = "none";
     });
 
-    document.getElementById("cancelEpisode").addEventListener("click", function() {
-        document.getElementById("episodeModal").style.display = "none";
+    document.getElementById("thoughtBtn").addEventListener("click", () => showEpisodeModal("Мысли", 5));
+    document.getElementById("touchBtn").addEventListener("click", () => showEpisodeModal("Касание", 30));
+    document.getElementById("toxicBtn").addEventListener("click", () => showEpisodeModal("Агрессия", 10));
+
+    // Модальное окно для списания штрафов
+    const resetModal = document.getElementById("resetModal");
+    const cancelResetBtn = document.getElementById("cancelReset");
+    const confirmResetBtn = document.getElementById("confirmReset");
+    const fineOptions = document.querySelectorAll(".fine-option");
+    let selectedFine = 0;
+
+    document.getElementById("resetFineBtn").addEventListener("click", () => {
+        const currentFine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        if (currentFine <= 0) {
+            alert("Нет штрафов для списания!");
+            return;
+        }
+        resetModal.style.display = "flex";
+        fineOptions.forEach(option => option.classList.remove("selected"));
+        confirmResetBtn.disabled = true;
+        selectedFine = 0;
     });
 
-    document.getElementById("confirmEpisode").addEventListener("click", function() {
-        let count = localStorage.getItem("episodeCount") ? parseInt(localStorage.getItem("episodeCount"), 10) : 0;
-        count++;
-        localStorage.setItem("episodeCount", count);
-        updateEpisodeDisplay();
-        document.getElementById("episodeModal").style.display = "none";
+    fineOptions.forEach(option => {
+        option.addEventListener("click", () => {
+            fineOptions.forEach(opt => opt.classList.remove("selected"));
+            option.classList.add("selected");
+            selectedFine = parseInt(option.getAttribute("data-value"), 10);
+            confirmResetBtn.disabled = false;
+        });
+    });
+
+    cancelResetBtn.addEventListener("click", () => {
+        resetModal.style.display = "none";
+    });
+
+    confirmResetBtn.addEventListener("click", () => {
+        let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        fine -= selectedFine;
+        localStorage.setItem("fineBalance", fine >= 0 ? fine.toString() : '0');
+        updateFineDisplay();
+        resetModal.style.display = "none";
     });
 </script>
 </body>
