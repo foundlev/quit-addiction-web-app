@@ -10,21 +10,26 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="assets/icons/image_256.png">
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
     <title>Таймер преодоления зависимости</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: #4f46e5;
-            --secondary: #6d28d9;
-            --background: #f1f5f9;
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #f8fafc;
             --surface: #ffffff;
-            --text: #111827;
-            --text-secondary: #6b7280;
-            --border: #d1d5db;
-            --radius: 16px;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --radius: 20px;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         @media (prefers-color-scheme: dark) {
             :root {
                 --background: #0f172a;
@@ -32,197 +37,458 @@
                 --text: #f8fafc;
                 --text-secondary: #94a3b8;
                 --border: #334155;
-                --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+                --shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
             }
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             transition: var(--transition);
         }
+
         body {
             background: var(--background);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: var(--text);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            line-height: 1.5;
         }
+
         .wrapper {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            padding: 0.5rem;
         }
+
         .card {
             background: var(--surface);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 2rem;
+            padding: 2rem 1.5rem;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient);
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         .card header {
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
+
         .card header i {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: var(--primary);
-            animation: popIn 0.5s ease;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
         }
+
         .timer {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            animation: fadeIn 1s ease;
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            font-feature-settings: 'tnum';
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.05em;
+            position: relative;
+            z-index: 1;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
         .motivation {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--text-secondary);
-            margin-bottom: 1.0rem;
-            animation: fadeIn 1.5s ease;
+            margin-bottom: 1.5rem;
+            min-height: 3rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.5s ease;
         }
+
         .progress-container {
             background: var(--border);
-            border-radius: var(--radius);
+            border-radius: 100px;
             overflow: hidden;
-            height: 14px;
+            height: 16px;
+            position: relative;
+            margin: 1.5rem 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
+
         .progress-bar {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             height: 100%;
             width: 0;
+            transition: width 1s ease-out;
+            position: relative;
         }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 8px;
+            background: linear-gradient(90deg,
+                rgba(255,255,255,0.4) 0%,
+                rgba(255,255,255,0.2) 100%);
+        }
+
         .fine-display {
-            margin: 1rem 0;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
+            margin: 1.5rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
         }
+
         .button-group {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
         .btn-episode {
-            flex: 1;
-            padding: 0.75rem;
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 0.9rem;
+            flex: 1 1 45%;
+            padding: 1rem;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             cursor: pointer;
-            transition: var(--transition);
+            color: var(--text);
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.3s ease;
         }
+
         .btn-episode:active {
-            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
         }
+
+        /*.btn-episode:active {*/
+        /*    transform: translateY(0);*/
+        /*    transition: all 0.1s ease;*/
+        /*}*/
+
+        .btn-episode i {
+            font-size: 1.25em;
+            color: var(--primary);
+        }
+
         .btn-reset {
-            margin-top: 1rem;
             width: 100%;
-            padding: 0.75rem;
-            background: var(--primary);
+            padding: 1.25rem;
+            background: var(--gradient);
             color: #fff;
             border: none;
-            border-radius: var(--radius);
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: var(--transition);
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-reset:active {
-            background: var(--secondary);
+
+        .btn-reset::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+
+        .btn-reset:active::before {
+            opacity: 1;
         }
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(4px);
         }
+
         .modal-content {
             background: var(--surface);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: var(--radius);
             text-align: center;
-            max-width: 300px;
+            max-width: 340px;
             width: 90%;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
         }
-        .modal-actions {
-            margin-top: 1rem;
-            display: flex;
-            justify-content: space-around;
-        }
-        .modal-btn {
-            border: none;
-            border-radius: var(--radius);
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-        .modal-btn.cancel {
-            background: var(--border);
-            color: var(--text);
-        }
-        .modal-btn.confirm {
-            background: var(--primary);
-            color: #fff;
-        }
-        .modal-btn.cancel:active {
-            background: var(--secondary);
-            color: #fff;
-        }
-        .modal-btn.confirm:active {
-            background: var(--secondary);
-        }
-        .fine-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 1rem;
-        }
+
         .fine-option {
-            background: var(--border);
+            background: var(--background);
             color: var(--text);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
-        .fine-option:active {
-            background: var(--primary);
-            color: #fff;
-        }
+
         .fine-option.selected {
-            background: var(--primary);
-            color: #fff;
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @keyframes gradientPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-reset:active {
+            animation: float 1.5s ease-in-out infinite;
+        }
+
+        .motivation {
+            animation: textFade 12s infinite;
+        }
+
+        @keyframes textFade {
+            0%, 100% { opacity: 0.2; transform: translateY(5px); }
+            10%, 90% { opacity: 1; transform: translateY(0); }
         }
     </style>
+<style>
+    /* Общие стили модальных окон */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        animation: modalFadeIn 0.4s ease-out;
+    }
+
+    .modal-content {
+        background: var(--surface);
+        padding: 2rem;
+        border-radius: var(--radius);
+        width: 90%;
+        max-width: 400px;
+        position: relative;
+        transform: scale(0.95);
+        opacity: 0;
+        animation: modalContentIn 0.3s 0.1s ease-out forwards;
+        border: 1px solid var(--border);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+
+    /* Анимации */
+    @keyframes modalFadeIn {
+        from { backdrop-filter: blur(0); opacity: 0; }
+        to { backdrop-filter: blur(10px); opacity: 1; }
+    }
+
+    @keyframes modalContentIn {
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Заголовок и текст */
+    .modal-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .modal-text {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 1rem 0;
+    }
+
+    /* Кнопки действий */
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        justify-content: center;
+    }
+
+    .modal-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .modal-btn i {
+        font-size: 1.1em;
+    }
+
+    .modal-btn.cancel {
+        background: var(--background);
+        color: var(--text);
+        border: 2px solid var(--border);
+    }
+
+    .modal-btn.cancel:active {
+        background: var(--border);
+        transform: translateY(-1px);
+    }
+
+    .modal-btn.confirm {
+        background: var(--gradient);
+        color: white;
+        border: 2px solid var(--primary);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modal-btn.confirm::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-btn.confirm:active::after {
+        opacity: 1;
+    }
+
+    /* Специфичные стили для модалки штрафов */
+    .fine-options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin: 1.5rem 0;
+    }
+
+    .fine-option {
+        padding: 0.75rem;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--background);
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .fine-option:active {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .fine-option.selected {
+        background: var(--gradient);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Иконки статуса */
+    .modal-status-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary);
+        animation: iconBounce 0.6s ease;
+    }
+
+    @keyframes iconBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Адаптивность */
+    @media (max-width: 480px) {
+        .modal-content {
+            padding: 1.5rem;
+        }
+
+        .fine-options {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
 </head>
 <body>
 <div class="wrapper">
@@ -244,7 +510,13 @@
                 <i class="fa-solid fa-hand-sparkles"></i> Касание
             </button>
             <button id="toxicBtn" class="btn-episode">
-                <i class="fa-solid fa-skull-crossbones"></i> Хейт
+                <i class="fa-solid fa-skull-crossbones"></i> Агрессия
+            </button>
+            <button id="msgBtn" class="btn-episode">
+                <i class="fa-solid fa-envelope"></i> Сообщение
+            </button>
+            <button id="moneyBtn" class="btn-episode">
+                <i class="fa-solid fa-money-bill-transfer"></i> Перевод
             </button>
         </div>
         <button id="resetFineBtn" class="btn-reset">
@@ -255,7 +527,11 @@
 
 <div id="episodeModal" class="modal">
     <div class="modal-content">
-        <p id="modalText">Вы уверены, что хотите зарегистрировать это?</p>
+        <div class="modal-header">
+            <i class="fas fa-exclamation-triangle modal-status-icon"></i>
+            <h3 class="modal-title">Подтверждение действия</h3>
+        </div>
+        <p class="modal-text" id="modalText">Вы уверены в выполнении этого действия?</p>
         <div class="modal-actions">
             <button id="cancelEpisode" class="modal-btn cancel">Отмена</button>
             <button id="confirmEpisode" class="modal-btn confirm">Подтвердить</button>
@@ -272,6 +548,9 @@
             <button class="fine-option" data-value="15">15</button>
             <button class="fine-option" data-value="20">20</button>
             <button class="fine-option" data-value="25">25</button>
+            <button class="fine-option" data-value="30">30</button>
+            <button class="fine-option" data-value="35">35</button>
+            <button class="fine-option" data-value="40">40</button>
         </div>
         <div class="modal-actions">
             <button id="cancelReset" class="modal-btn cancel">Отмена</button>
@@ -319,7 +598,107 @@
         "Утонул? Не нытьём спасёшься, а зубами.",
         "Не поднимают упавших. Ползи или сгни.",
         "Не заслужил — подохнешь без следа.",
-        "Ты либо царь, либо мясо. Решай, сука."
+        "Ты либо царь, либо мясо. Решай, сука.",
+        "Воняешь слабостью — тебя уже хоронили.",
+        "Рыдания не тренируют, мудак. Вставай.",
+        "Твой предел — это начало сильного.",
+        "Молчать и делать. Или гнить и ныть.",
+        "Никакой пощады. Мир тебя сожрёт живьём.",
+        "Руки опустил? Гроб копай сразу.",
+        "Ты либо пыль, либо буря. Выбирай.",
+        "Никто не спасёт. Или сам, или никак.",
+        "Съедают тех, кто медлит. Жуй бетон.",
+        "Быстро встал или долго воняй гнилью.",
+        "Нытьё — язык рабов. Говоришь на нём?",
+        "Ты либо молот, либо мясо под ним.",
+        "Или ты огонь, или тебя тушат ногами.",
+        "Сколько слов — столько страха. Делай.",
+        "Сидишь? Значит, проиграл. Вперёд!",
+        "Хочешь пощады? Получи плевок.",
+        "Твои слёзы — это топливо для врага.",
+        "Ты слаб? Станешь удобрением.",
+        "Остался без сил? Используй ярость.",
+        "Прощения нет. Только путь сквозь боль.",
+        "Боль — твоя мать. Прими или сдохни.",
+        "Ты в аду. Танцуй или сгоришь.",
+        "Вылезай из себя. Сейчас или никогда.",
+        "Сдохни на ходу, но не останавливайся.",
+        "Слабый дух — это смертный приговор.",
+        "Заткнись и тяни. Время твоих дел.",
+        "Ты либо легенда, либо мусор.",
+        "Живёшь? Значит, обязан быть сильным.",
+        "Нет никого. Только ты и твой выбор.",
+        "Сломался? Не чинись. Умри с достоинством.",
+        "Ты грязь, если не встал после падения.",
+        "Никто не обязан ждать. Или догоняй, или сдохни.",
+        "Не хочешь боли — не получишь и силы.",
+        "Завалился? Под себя или вверх?",
+        "Страх — твоя плеть. Хлещи себя ею.",
+        "Ты или рвёшь мясо, или сам мясо.",
+        "Сдашься раз — сдашься всегда.",
+        "Стукни боль в лицо. Стань сильнее.",
+        "Ты не в аду. Ад в тебе. Воспользуйся им.",
+        "Нет выхода — есть прорыв.",
+        "Слабость — зараза. Излечись железом.",
+        "Невозможно? Значит, ты живёшь правильно.",
+        "Действие — всё. Остальное мусор.",
+        "Сквозь слёзы — к стали. Или никуда.",
+        "Время идёт. Ты — нет? Значит, умираешь.",
+        "Ты обязан. Себе. До последней капли.",
+        "Или ломай, или будешь сломлен.",
+        "Живёшь в боли? Значит, на верном пути.",
+        "Рёв мира заглуши ударом.",
+        "Не чувствуй. Делай. Живи так.",
+        "Или кулак, или прах. Всё просто.",
+        "Слабость — петля. Не надень её.",
+        "Или ты хищник, или тебя скормят детям.",
+        "Ты встал? Тогда бей. Сразу.",
+        "Они ждут, что ты сдохнешь. Подведи их.",
+        "Мир — не цирк. Здесь жрут.",
+        "Сила — в решении. Прими его.",
+        "Ты не жертва. Ты либо удар, либо пыль.",
+        "Тебе больно? Хорошо. Продолжай.",
+        "Сопли не куют мечи. Делай выбор.",
+        "Ломают всех. Но не все сдаются.",
+        "Взлетишь — если порвёшь страх.",
+        "Ты воин? Докажи. Сейчас.",
+        "Не можешь — значит, не хочешь.",
+        "Твоё имя — твой бой. Не просри его.",
+        "Они ржут? Смейся последним.",
+        "Сквозь гниль — к свету. Проломи.",
+        "Сдохни на пути, но не сверни.",
+        "Или ты — крик, или ты — эхо.",
+        "Ты рожден не быть слабым. Не предай.",
+        "Горишь? Подкидывай дрова.",
+        "Или ты свернёшь, или тебя свернут.",
+        "Сомнения — нож. Вырви их.",
+        "Падаешь? Значит, шагал. Вставай.",
+        "Ты не имеешь права быть пустым.",
+        "Выбрал путь? Значит, иди до конца.",
+        "Ты в игре. Правила — кровь и воля.",
+        "Каждая секунда — шанс умереть сильнее.",
+        "Судьба — твоя сука. Удержи поводок.",
+        "Не будь следом. Будь дорогой.",
+        "Твои слабости — твои цепи. Сломай.",
+        "Устал — значит, жив. Бейся.",
+        "Ты — удар судьбы. Прими форму.",
+        "Или ты — боль, или ты — забвение.",
+        "Твоя ярость — твой якорь. Утопи страх.",
+        "Нет пути назад. Только вперёд в пламя.",
+        "Сомневаешься? Умер уже.",
+        "Ты обязан стать тем, кого боятся.",
+        "Жив? Значит, ещё есть чем платить.",
+        "Время рвёт тех, кто стоит.",
+        "Твоё оружие — решимость. Не вырони.",
+        "Тьма не ест тех, кто орёт ей в лицо.",
+        "Сила приходит, когда отступать поздно.",
+        "Ты на краю? Прыгай с кулаками вперёд.",
+        "Судьба бьёт — бей в ответ.",
+        "Или ты разорвёшь мир, или он тебя.",
+        "Умереть можно позже. Сейчас — дерись.",
+        "Ты либо страх, либо жертва страха.",
+        "Не свернёшь — выживешь. Всё просто.",
+        "Сделай первый шаг. Или шагни в могилу."
     ];
     const startTime = new Date("2025-03-29T22:21:00Z");
     const totalDays = 8;
@@ -364,7 +743,7 @@
     const confirmEpisodeBtn = document.getElementById("confirmEpisode");
 
     function showEpisodeModal(type, fineAmount) {
-        modalText.textContent = `Вы уверены, что хотите зарегистрировать "${type}"?`;
+        modalText.innerHTML = `Вы уверены, что хотите зарегистрировать штраф <b>${fineAmount}</b> за <b>${type}</b>?`;
         episodeModal.style.display = "flex";
         confirmEpisodeBtn.onclick = () => {
             let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
@@ -381,7 +760,9 @@
 
     document.getElementById("thoughtBtn").addEventListener("click", () => showEpisodeModal("Мысли", 5));
     document.getElementById("touchBtn").addEventListener("click", () => showEpisodeModal("Касание", 30));
-    document.getElementById("toxicBtn").addEventListener("click", () => showEpisodeModal("Хейт", 10));
+    document.getElementById("toxicBtn").addEventListener("click", () => showEpisodeModal("Агрессия", 10));
+    document.getElementById("msgBtn").addEventListener("click", () => showEpisodeModal("Сообщение", 20));
+    document.getElementById("moneyBtn").addEventListener("click", () => showEpisodeModal("Перевод", 50));
 
     // Модальное окно для списания штрафов
     const resetModal = document.getElementById("resetModal");
