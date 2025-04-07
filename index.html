@@ -119,17 +119,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .motivation {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            min-height: 3rem;
-            line-height: 1.4;
-            position: relative;
-            z-index: 1;
-            transition: opacity 0.5s ease;
-        }
-
         .progress-container {
             background: var(--border);
             border-radius: 100px;
@@ -302,10 +291,6 @@
             animation: float 1.5s ease-in-out infinite;
         }
 
-        .motivation {
-            animation: textFade 12s infinite;
-        }
-
         @keyframes textFade {
             0%, 100% { opacity: 0.2; transform: translateY(5px); }
             10%, 90% { opacity: 1; transform: translateY(0); }
@@ -398,6 +383,7 @@
         background: var(--background);
         color: var(--text);
         border: 2px solid var(--border);
+        cursor: pointer;
     }
 
     .modal-btn.cancel:active {
@@ -411,6 +397,7 @@
         border: 2px solid var(--primary);
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .modal-btn.confirm::after {
@@ -619,6 +606,59 @@
             mix-blend-mode: soft-light;
         }
     }
+
+    .progress-container {
+        background: linear-gradient(90deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+        border-radius: 12px;
+        height: 20px;
+        position: relative;
+        overflow: hidden;
+        margin: 1.5rem 0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), inset 0 -1px 2px rgba(0,0,0,0.05);
+        border: 1px solid var(--border);
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: var(--gradient);
+        position: relative;
+        transition: width 0.8s ease-in-out;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .progress-bar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.3),
+            transparent
+        );
+        animation: shimmer 2s infinite;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: rgba(255,255,255,0.5);
+        box-shadow: 0 0 8px rgba(255,255,255,0.8);
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        50% { transform: translateX(200%); }
+        100% { transform: translateX(200%); }
+    }
 </style>
 </head>
 <body>
@@ -628,7 +668,6 @@
             <i class="fa-solid fa-fire"></i>
         </header>
         <div id="timer" class="timer">00:00:00</div>
-        <div id="motivation" class="motivation">Начни свое преображение!</div>
         <div class="progress-container">
             <div id="progress" class="progress-bar"></div>
         </div>
@@ -648,6 +687,9 @@
             </button>
             <button id="moneyBtn" class="btn-episode">
                 <i class="fa-solid fa-money-bill-transfer"></i> Перевод
+            </button>
+            <button id="webBtn" class="btn-episode">
+                <i class="fa-solid fa-computer-mouse"></i> Сайты
             </button>
         </div>
         <button id="resetFineBtn" class="btn-reset">
@@ -674,7 +716,6 @@
     <div class="modal-content">
         <p>Выберите количество для списания:</p>
         <div class="fine-options">
-            <button class="fine-option" data-value="5">5</button>
             <button class="fine-option" data-value="10">10</button>
             <button class="fine-option" data-value="15">15</button>
             <button class="fine-option" data-value="20">20</button>
@@ -682,6 +723,8 @@
             <button class="fine-option" data-value="30">30</button>
             <button class="fine-option" data-value="35">35</button>
             <button class="fine-option" data-value="40">40</button>
+            <button class="fine-option" data-value="45">45</button>
+            <button class="fine-option" data-value="50">50</button>
         </div>
         <div class="modal-actions">
             <button id="cancelReset" class="modal-btn cancel">Отмена</button>
@@ -691,148 +734,8 @@
 </div>
 
 <script>
-    const quotes = [
-        "Слабость — твой позор. Выбери сталь или сгни.",
-        "Жалость? Её нет. Либо вставай, либо сдохни.",
-        "Не можешь себя держать в руках — ты кусок дерьма.",
-        "Спасение? Забудь. Выгребай сам или пиздец.",
-        "Хватит скулить, сука. Двигайся или сгинь.",
-        "Слабак? Жизнь тебя выебет и не заметит.",
-        "Жри или будь сожран. Третьего не дано.",
-        "Ты никто, пока не вырвешь своё место зубами.",
-        "Сдался? Ты и не начинал, мразь.",
-        "Оправдания — дерьмо. Докажи делом или заткнись.",
-        "Дисциплина или могила. Выбирай быстро.",
-        "Слил? Сам себя закопал, ублюдок.",
-        "Усталость — для слабых. Ты слабак или мужик?",
-        "Отступил? Дай себе в морду и вперёд, тварь.",
-        "Нравится ныть? Смотри, как тебя топчут.",
-        "Или ты рвёшь всех, или тебя раздавят.",
-        "Завтра не существует. Шевелись или сдохнешь.",
-        "Слился? Всем пох. Твой стыд — твоя ноша.",
-        "Жалеть себя — это жрать своё говно. Прекращай.",
-        "Больно? Хорошо. Терпи или сгни в луже слёз.",
-        "Сильные уже идут. Ты ещё сидишь, чмо?",
-        "Хищник или падаль. Решай, или тебя сожрут.",
-        "Мечта? Она сдохла, пока ты дрочишь время.",
-        "Боль не выносишь? Живи в дерьме, слабак.",
-        "Лень — твой враг. Убей её или сдохни.",
-        "Каждый слив — это ты плюёшь себе в душу.",
-        "Бороться не хочешь? Тони в своем говне.",
-        "Результат или смерть. Болтать некогда.",
-        "Оправдания — для лузеров. Ты лузер?",
-        "Твоя жизнь — твой бой. Проиграл — сам виноват.",
-        "Сидишь и плачешь? Победители уже ушли вперёд.",
-        "Слабаков ломают. Стань костью или сломайся.",
-        "Лёгкий путь? Это для шлюх. Докажи, что ты не оно.",
-        "Сдаёшься — кормишь чужую силу. Продолжай, мразь.",
-        "Утонул? Не нытьём спасёшься, а зубами.",
-        "Не поднимают упавших. Ползи или сгни.",
-        "Не заслужил — подохнешь без следа.",
-        "Ты либо царь, либо мясо. Решай, сука.",
-        "Воняешь слабостью — тебя уже хоронили.",
-        "Рыдания не тренируют, мудак. Вставай.",
-        "Твой предел — это начало сильного.",
-        "Молчать и делать. Или гнить и ныть.",
-        "Никакой пощады. Мир тебя сожрёт живьём.",
-        "Руки опустил? Гроб копай сразу.",
-        "Ты либо пыль, либо буря. Выбирай.",
-        "Никто не спасёт. Или сам, или никак.",
-        "Съедают тех, кто медлит. Жуй бетон.",
-        "Быстро встал или долго воняй гнилью.",
-        "Нытьё — язык рабов. Говоришь на нём?",
-        "Ты либо молот, либо мясо под ним.",
-        "Или ты огонь, или тебя тушат ногами.",
-        "Сколько слов — столько страха. Делай.",
-        "Сидишь? Значит, проиграл. Вперёд!",
-        "Хочешь пощады? Получи плевок.",
-        "Твои слёзы — это топливо для врага.",
-        "Ты слаб? Станешь удобрением.",
-        "Остался без сил? Используй ярость.",
-        "Прощения нет. Только путь сквозь боль.",
-        "Боль — твоя мать. Прими или сдохни.",
-        "Ты в аду. Танцуй или сгоришь.",
-        "Вылезай из себя. Сейчас или никогда.",
-        "Сдохни на ходу, но не останавливайся.",
-        "Слабый дух — это смертный приговор.",
-        "Заткнись и тяни. Время твоих дел.",
-        "Ты либо легенда, либо мусор.",
-        "Живёшь? Значит, обязан быть сильным.",
-        "Нет никого. Только ты и твой выбор.",
-        "Сломался? Не чинись. Умри с достоинством.",
-        "Ты грязь, если не встал после падения.",
-        "Никто не обязан ждать. Или догоняй, или сдохни.",
-        "Не хочешь боли — не получишь и силы.",
-        "Завалился? Под себя или вверх?",
-        "Страх — твоя плеть. Хлещи себя ею.",
-        "Ты или рвёшь мясо, или сам мясо.",
-        "Сдашься раз — сдашься всегда.",
-        "Стукни боль в лицо. Стань сильнее.",
-        "Ты не в аду. Ад в тебе. Воспользуйся им.",
-        "Нет выхода — есть прорыв.",
-        "Слабость — зараза. Излечись железом.",
-        "Невозможно? Значит, ты живёшь правильно.",
-        "Действие — всё. Остальное мусор.",
-        "Сквозь слёзы — к стали. Или никуда.",
-        "Время идёт. Ты — нет? Значит, умираешь.",
-        "Ты обязан. Себе. До последней капли.",
-        "Или ломай, или будешь сломлен.",
-        "Живёшь в боли? Значит, на верном пути.",
-        "Рёв мира заглуши ударом.",
-        "Не чувствуй. Делай. Живи так.",
-        "Или кулак, или прах. Всё просто.",
-        "Слабость — петля. Не надень её.",
-        "Или ты хищник, или тебя скормят детям.",
-        "Ты встал? Тогда бей. Сразу.",
-        "Они ждут, что ты сдохнешь. Подведи их.",
-        "Мир — не цирк. Здесь жрут.",
-        "Сила — в решении. Прими его.",
-        "Ты не жертва. Ты либо удар, либо пыль.",
-        "Тебе больно? Хорошо. Продолжай.",
-        "Сопли не куют мечи. Делай выбор.",
-        "Ломают всех. Но не все сдаются.",
-        "Взлетишь — если порвёшь страх.",
-        "Ты воин? Докажи. Сейчас.",
-        "Не можешь — значит, не хочешь.",
-        "Твоё имя — твой бой. Не просри его.",
-        "Они ржут? Смейся последним.",
-        "Сквозь гниль — к свету. Проломи.",
-        "Сдохни на пути, но не сверни.",
-        "Или ты — крик, или ты — эхо.",
-        "Ты рожден не быть слабым. Не предай.",
-        "Горишь? Подкидывай дрова.",
-        "Или ты свернёшь, или тебя свернут.",
-        "Сомнения — нож. Вырви их.",
-        "Падаешь? Значит, шагал. Вставай.",
-        "Ты не имеешь права быть пустым.",
-        "Выбрал путь? Значит, иди до конца.",
-        "Ты в игре. Правила — кровь и воля.",
-        "Каждая секунда — шанс умереть сильнее.",
-        "Судьба — твоя сука. Удержи поводок.",
-        "Не будь следом. Будь дорогой.",
-        "Твои слабости — твои цепи. Сломай.",
-        "Устал — значит, жив. Бейся.",
-        "Ты — удар судьбы. Прими форму.",
-        "Или ты — боль, или ты — забвение.",
-        "Твоя ярость — твой якорь. Утопи страх.",
-        "Нет пути назад. Только вперёд в пламя.",
-        "Сомневаешься? Умер уже.",
-        "Ты обязан стать тем, кого боятся.",
-        "Жив? Значит, ещё есть чем платить.",
-        "Время рвёт тех, кто стоит.",
-        "Твоё оружие — решимость. Не вырони.",
-        "Тьма не ест тех, кто орёт ей в лицо.",
-        "Сила приходит, когда отступать поздно.",
-        "Ты на краю? Прыгай с кулаками вперёд.",
-        "Судьба бьёт — бей в ответ.",
-        "Или ты разорвёшь мир, или он тебя.",
-        "Умереть можно позже. Сейчас — дерись.",
-        "Ты либо страх, либо жертва страха.",
-        "Не свернёшь — выживешь. Всё просто.",
-        "Сделай первый шаг. Или шагни в могилу."
-    ];
     const startTime = new Date("2025-03-29T22:21:00Z");
-    const totalDays = 8;
+    const totalDays = 90;
 
     function formatTime(seconds) {
         const days = String(Math.floor(seconds / 86400)).padStart(2, '0');
@@ -851,21 +754,14 @@
         document.getElementById('progress').style.width = progressPercent + '%';
     }
 
-    function updateQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        document.getElementById('motivation').textContent = quotes[randomIndex];
-    }
-
     function updateFineDisplay() {
         const fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
         document.getElementById("fineDisplay").textContent = `Штрафы: ${fine}`;
     }
 
     updateTimer();
-    updateQuote();
     updateFineDisplay();
     setInterval(updateTimer, 1000);
-    setInterval(updateQuote, 12000);
 
     // Модальное окно для добавления штрафов
     const episodeModal = document.getElementById("episodeModal");
@@ -874,14 +770,37 @@
     const confirmEpisodeBtn = document.getElementById("confirmEpisode");
 
     function showEpisodeModal(type, fineAmount) {
-        modalText.innerHTML = `Вы уверены, что хотите зарегистрировать штраф <b>${fineAmount}</b> за <b>${type}</b>?`;
+        // Клонируем модальное окно для сброса анимации
+        const oldModalContent = episodeModal.querySelector('.modal-content');
+        const newModalContent = oldModalContent.cloneNode(true);
+        episodeModal.replaceChild(newModalContent, oldModalContent);
+
+        // Переназначаем элементы внутри нового модального окна
+        const newModalText = newModalContent.querySelector('#modalText');
+        const newConfirmEpisodeBtn = newModalContent.querySelector('#confirmEpisode');
+        const newCancelEpisodeBtn = newModalContent.querySelector('#cancelEpisode');
+
+        newModalText.innerHTML = `Вы уверены, что хотите зарегистрировать штраф <b>${fineAmount}</b> за <b>${type}</b>?`;
         episodeModal.style.display = "flex";
-        confirmEpisodeBtn.onclick = () => {
+
+        newConfirmEpisodeBtn.onclick = () => {
             let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
             fine += fineAmount;
             localStorage.setItem("fineBalance", fine);
             updateFineDisplay();
             episodeModal.style.display = "none";
+        };
+
+        // Назначаем обработчик для кнопки "Отмена"
+        newCancelEpisodeBtn.onclick = () => {
+            episodeModal.style.display = "none";
+        };
+
+        // Добавляем обработчик клика по фону модального окна
+        episodeModal.onclick = (event) => {
+            if (event.target === episodeModal) {
+                episodeModal.style.display = "none";
+            }
         };
     }
 
@@ -894,6 +813,7 @@
     document.getElementById("toxicBtn").addEventListener("click", () => showEpisodeModal("Хейт", 10));
     document.getElementById("msgBtn").addEventListener("click", () => showEpisodeModal("Сообщение", 20));
     document.getElementById("moneyBtn").addEventListener("click", () => showEpisodeModal("Перевод", 50));
+    document.getElementById("webBtn").addEventListener("click", () => showEpisodeModal("Сайты", 200));
 
     // Модальное окно для списания штрафов
     const resetModal = document.getElementById("resetModal");
@@ -908,10 +828,54 @@
             alert("Нет штрафов для списания!");
             return;
         }
+
+        // Клонируем содержимое модального окна для сброса анимации и событий
+        const oldModalContent = resetModal.querySelector('.modal-content');
+        const newModalContent = oldModalContent.cloneNode(true);
+        resetModal.replaceChild(newModalContent, oldModalContent);
+
+        // Получаем новые ссылки на кнопки и fine options
+        const newCancelResetBtn = newModalContent.querySelector('#cancelReset');
+        const newConfirmResetBtn = newModalContent.querySelector('#confirmReset');
+        const newFineOptions = newModalContent.querySelectorAll('.fine-option');
+        let selectedFine = 0;
+
+        // Сброс выделения и деактивация кнопки подтверждения
+        newFineOptions.forEach(option => option.classList.remove("selected"));
+        newConfirmResetBtn.disabled = true;
+
+        // Обработчик выбора штрафа
+        newFineOptions.forEach(option => {
+            option.addEventListener("click", () => {
+                newFineOptions.forEach(opt => opt.classList.remove("selected"));
+                option.classList.add("selected");
+                selectedFine = parseInt(option.getAttribute("data-value"), 10);
+                newConfirmResetBtn.disabled = false;
+            });
+        });
+
+        // Обработчик кнопки "Отмена"
+        newCancelResetBtn.addEventListener("click", () => {
+            resetModal.style.display = "none";
+        });
+
+        // Обработчик кнопки "Подтвердить"
+        newConfirmResetBtn.addEventListener("click", () => {
+            let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+            fine -= selectedFine;
+            localStorage.setItem("fineBalance", fine >= 0 ? fine.toString() : '0');
+            updateFineDisplay();
+            resetModal.style.display = "none";
+        });
+
+        // Закрытие модалки при клике по пустой области
+        resetModal.onclick = (event) => {
+            if (event.target === resetModal) {
+                resetModal.style.display = "none";
+            }
+        };
+
         resetModal.style.display = "flex";
-        fineOptions.forEach(option => option.classList.remove("selected"));
-        confirmResetBtn.disabled = true;
-        selectedFine = 0;
     });
 
     fineOptions.forEach(option => {
