@@ -734,7 +734,7 @@
 </div>
 
 <script>
-    const startTime = new Date("2025-04-10T13:26:00Z");
+    const startTime = new Date("2025-04-11T17:00:00Z");
     const totalDays = 12;
 
     function formatTime(seconds) {
@@ -755,7 +755,7 @@
     }
 
     function updateFineDisplay() {
-        const fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        const fine = localStorage.getItem("fineBalanceNew") ? parseInt(localStorage.getItem("fineBalanceNew"), 10) : 0;
         document.getElementById("fineDisplay").textContent = `Штрафы: ${fine}`;
     }
 
@@ -784,9 +784,9 @@
         episodeModal.style.display = "flex";
 
         newConfirmEpisodeBtn.onclick = () => {
-            let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+            let fine = localStorage.getItem("fineBalanceNew") ? parseInt(localStorage.getItem("fineBalanceNew"), 10) : 0;
             fine += fineAmount;
-            localStorage.setItem("fineBalance", fine);
+            localStorage.setItem("fineBalanceNew", fine);
             updateFineDisplay();
             episodeModal.style.display = "none";
         };
@@ -823,7 +823,7 @@
     let selectedFine = 0;
 
     document.getElementById("resetFineBtn").addEventListener("click", () => {
-        const currentFine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        const currentFine = localStorage.getItem("fineBalanceNew") ? parseInt(localStorage.getItem("fineBalanceNew"), 10) : 0;
         if (currentFine <= 0) {
             alert("Нет штрафов для списания!");
             return;
@@ -861,9 +861,9 @@
 
         // Обработчик кнопки "Подтвердить"
         newConfirmResetBtn.addEventListener("click", () => {
-            let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+            let fine = localStorage.getItem("fineBalanceNew") ? parseInt(localStorage.getItem("fineBalanceNew"), 10) : 0;
             fine -= selectedFine;
-            localStorage.setItem("fineBalance", fine >= 0 ? fine.toString() : '0');
+            localStorage.setItem("fineBalanceNew", fine >= 0 ? fine.toString() : '0');
             updateFineDisplay();
             resetModal.style.display = "none";
         });
@@ -892,9 +892,9 @@
     });
 
     confirmResetBtn.addEventListener("click", () => {
-        let fine = localStorage.getItem("fineBalance") ? parseInt(localStorage.getItem("fineBalance"), 10) : 0;
+        let fine = localStorage.getItem("fineBalanceNew") ? parseInt(localStorage.getItem("fineBalanceNew"), 10) : 0;
         fine -= selectedFine;
-        localStorage.setItem("fineBalance", fine >= 0 ? fine.toString() : '0');
+        localStorage.setItem("fineBalanceNew", fine >= 0 ? fine.toString() : '0');
         updateFineDisplay();
         resetModal.style.display = "none";
     });
