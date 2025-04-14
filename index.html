@@ -79,7 +79,7 @@
             // Анимация заполнения и цвет ломок
             const blocks = document.querySelectorAll('.day-block');
             blocks.forEach((block, idx) => {
-                if (idx <= daysPassed) {
+                if (idx < daysPassed) {
                     setTimeout(() => {
                         block.classList.add('active');
 

@@ -92,6 +92,7 @@ h1 {
     font-size: 16px;
     cursor: pointer;
     transition: transform 0.2s;
+    width: 100%;
 }
 
 .craving-btn:hover {
@@ -126,6 +127,10 @@ h1 {
     right: 12px;
     cursor: pointer;
     font-size: 22px;
+}
+
+#eventText {
+    margin-right: 15px;
 }
 
 .hidden {
