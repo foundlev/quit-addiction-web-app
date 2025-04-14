@@ -5,6 +5,7 @@
     --block-color: #e0e0e0;
     --active-block-color: #4caf50;
     --milestone-border-color: black;
+    --event-border-color: #ff9800;
     --block-shadow: rgba(0, 0, 0, 0.1);
     --shadow-color: black;
 }
@@ -17,13 +18,14 @@
         --block-color: #333;
         --active-block-color: #81c784;
         --milestone-border-color: white;
+        --event-border-color: #ffb74d;
         --block-shadow: rgba(0, 0, 0, 0.4);
         --shadow-color: white;
     }
 }
 
 body {
-    font-family: 'Inter', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
@@ -31,6 +33,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .container {
@@ -56,22 +59,22 @@ h1 {
     box-shadow: 0 2px 4px var(--block-shadow);
     font-weight: 500;
     transform: scale(0.95);
-    transition: background-color 0.4s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-    border: 2px solid var(--block-color);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+    border: 2px solid transparent;
 }
 
 .day-block.active {
     background-color: var(--active-block-color);
     transform: scale(1);
-    border: 2px solid var(--active-block-color);
     color: var(--active-text-color);
 }
 
 .day-block.milestone {
     border: 2px solid var(--milestone-border-color);
-    box-shadow: 0 0 2px var(--shadow-color);
+}
+
+.day-block.event-day {
+    border: 2px dashed var(--event-border-color);
 }
 
 .day-block:hover {
@@ -79,18 +82,69 @@ h1 {
     box-shadow: 0 4px 8px var(--block-shadow);
 }
 
-/* Адаптация под смартфоны */
-@media (max-width: 480px) {
-    .day-block {
-        padding: 10px 0;
-        font-size: 14px;
-    }
+.craving-btn {
+    margin-top: 25px;
+    padding: 12px 18px;
+    border: none;
+    background-color: var(--block-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-    .container {
-        padding: 10px;
-    }
+.craving-btn:hover {
+    transform: scale(1.05);
+}
 
-    h1 {
-        font-size: 20px;
-    }
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-color);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--block-shadow);
+    position: relative;
+}
+
+.modal-content p {
+    margin: 0;
+}
+
+#closeModal {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width:480px) {
+    .day-block { padding:10px 0; font-size:14px }
+    .container { padding:10px }
+    h1 { font-size:20px }
+}
+
+.day-block.active {
+    background-color: var(--active-block-color);
+    transform: scale(1);
+    color: var(--active-text-color);
+}
+
+.day-block.milestone {
+    border: 2px solid var(--milestone-border-color);
+    box-shadow: 0 0 4px var(--shadow-color);
 }
