@@ -1,20 +1,24 @@
 :root {
     --bg-color: #f9f9f9;
     --text-color: #333;
+    --active-text-color: white;
     --block-color: #e0e0e0;
     --active-block-color: #4caf50;
     --milestone-border-color: black;
     --block-shadow: rgba(0, 0, 0, 0.1);
+    --shadow-color: black;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --bg-color: #1e1e1e;
         --text-color: #ddd;
+        --active-text-color: black;
         --block-color: #333;
         --active-block-color: #81c784;
         --milestone-border-color: white;
         --block-shadow: rgba(0, 0, 0, 0.4);
+        --shadow-color: white;
     }
 }
 
@@ -52,20 +56,22 @@ h1 {
     box-shadow: 0 2px 4px var(--block-shadow);
     font-weight: 500;
     transform: scale(0.95);
-    transition:
-        background-color 0.4s ease,
+    transition: background-color 0.4s ease,
         transform 0.2s ease,
         box-shadow 0.2s ease;
+    border: 2px solid var(--block-color);
 }
 
 .day-block.active {
     background-color: var(--active-block-color);
-    color: white;
     transform: scale(1);
+    border: 2px solid var(--active-block-color);
+    color: var(--active-text-color);
 }
 
 .day-block.milestone {
     border: 2px solid var(--milestone-border-color);
+    box-shadow: 0 0 2px var(--shadow-color);
 }
 
 .day-block:hover {
