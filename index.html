@@ -15,9 +15,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Отсчёт дней</h1>
+        <div class="exercise-counter">
+            <p>Отжим: <span id="numberPushUps">-</span></p>
+            <p>Пресс: <span id="numberAbs">-</span></p>
+            <p>Дней: <span id="numberDays">-</span></p>
+        </div>
         <div id="daysContainer" class="days-container"></div>
-        <button id="addCravingBtn" class="craving-btn">Записать ломку</button>
+        <div id="cravingsContainer" class="cravings-container">
+            <button id="addCravingBtn" class="craving-btn">Записать ломку</button>
+            <button id="regPushUpsBtn" class="craving-btn">10 Отжиманий</button>
+            <button id="regAbsBtn" class="craving-btn">10 Пресса</button>
+        </div>
     </div>
 
     <!-- кастомное модальное окно -->
@@ -28,91 +36,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const startDate = new Date('2025-04-14T13:45:00');
-            const today = new Date();
-            const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-
-            const milestones = [4, 12, 30];
-
-            const eventDays = {
-                4: "Начало свободы",
-                12: "Новый рекорд",
-                15: "Небольшой донат",
-                30: "Оплата ресторана",
-                45: "Apple Watch",
-                90: "Большой донат"
-            };
-
-            const cravings = JSON.parse(localStorage.getItem('cravings') || '{}');
-            const daysContainer = document.getElementById('daysContainer');
-
-            function getColor(intensity) {
-                const green = [76, 175, 80]; // #4caf50
-                const red = [244, 67, 54];   // #f44336
-
-                return `rgb(
-                    ${Math.floor(green[0] + (red[0] - green[0]) * intensity)},
-                    ${Math.floor(green[1] + (red[1] - green[1]) * intensity)},
-                    ${Math.floor(green[2] + (red[2] - green[2]) * intensity)}
-                )`;
-            }
-
-            for (let i = 0; i < 91; i++) {
-                const dayNum = i + 1;
-                const dayBlock = document.createElement('div');
-                dayBlock.className = 'day-block';
-                dayBlock.textContent = dayNum;
-
-                if (milestones.includes(dayNum) || eventDays[dayNum]) {
-                    dayBlock.classList.add('milestone');
-                }
-
-                if (eventDays[dayNum]) {
-                    dayBlock.dataset.event = eventDays[dayNum];
-                }
-
-                daysContainer.appendChild(dayBlock);
-            }
-
-            // Анимация заполнения и цвет ломок
-            const blocks = document.querySelectorAll('.day-block');
-            blocks.forEach((block, idx) => {
-                if (idx < daysPassed) {
-                    setTimeout(() => {
-                        block.classList.add('active');
-
-                        const cravingCount = cravings[idx + 1] || 0;
-                        if (cravingCount > 0) {
-                            const intensity = Math.min(cravingCount / 5, 1);
-                            block.style.backgroundColor = getColor(intensity);
-                        }
-
-                    }, idx * 30);
-                }
-
-                block.addEventListener('click', () => {
-                    if (block.dataset.event) {
-                        document.getElementById('eventText').textContent = block.dataset.event;
-                        document.getElementById('eventModal').classList.remove('hidden');
-                    }
-                });
-            });
-
-            // Ломки
-            document.getElementById('addCravingBtn').addEventListener('click', () => {
-                const currentDay = daysPassed + 1;
-                cravings[currentDay] = (cravings[currentDay] || 0) + 1;
-                localStorage.setItem('cravings', JSON.stringify(cravings));
-                location.reload();
-            });
-
-            // Модальное окно
-            document.getElementById('closeModal').addEventListener('click', () => {
-                document.getElementById('eventModal').classList.add('hidden');
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

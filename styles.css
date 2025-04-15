@@ -153,3 +153,27 @@ h1 {
     border: 2px solid var(--milestone-border-color);
     box-shadow: 0 0 4px var(--shadow-color);
 }
+
+.exercise-counter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.exercise-counter p {
+    margin: 0;
+    padding: 10px;
+    background-color: var(--block-color);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px var(--block-shadow);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+#cravingsContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
