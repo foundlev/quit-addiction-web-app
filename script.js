@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startDate = new Date(Date.UTC(2025, 3, 17, 13, 20, 0));
+    const startDate = new Date(Date.UTC(2025, 3, 17, 15, 20, 0));
     const today = new Date();
     const daysPassedFloat = (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     const daysPassed = Math.floor(daysPassedFloat);
