@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startDate = new Date('2025-04-15T10:35:00');
+    const startDate = new Date(Date.UTC(2025, 3, 17, 13, 20, 0));
     const today = new Date();
-    const daysPassedFloat = (today - startDate) / (1000 * 60 * 60 * 24);
+    const daysPassedFloat = (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     const daysPassed = Math.floor(daysPassedFloat);
 
-    document.getElementById('numberDays').textContent = daysPassedFloat.toFixed(1);
+    document.getElementById('numberDays').textContent = daysPassedFloat.toFixed(2);
 
     const milestones = [4, 12, 30];
 
@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
         90: "Большой донат"
     };
 
-    const cravings = JSON.parse(localStorage.getItem('cravings') || '{}');
+    const cravings = JSON.parse(localStorage.getItem('cravingsNew') || '{}');
     const daysContainer = document.getElementById('daysContainer');
 
     function calculatePushUps(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 40 + 3 * i;
+            result += 100 + 2 * i;
         }
         result -= done;
         if (result < 0) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateAbs(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 20 + 3 * i;
+            result += 50 + 2 * i;
         }
         result -= done;
         if (result < 0) {
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function uploadExercise() {
-        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDone') || '0');
-        const absDone = parseInt(localStorage.getItem('absDone') || '0');
+        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNew') || '0');
+        const absDone = parseInt(localStorage.getItem('absDoneNew') || '0');
 
         const pushUps = calculatePushUps(daysPassedFloat + 1, pushUpsDone);
         const abs = calculateAbs(daysPassedFloat + 1, absDone);
@@ -57,15 +57,31 @@ document.addEventListener('DOMContentLoaded', function() {
     uploadExercise();
 
     document.getElementById('regPushUpsBtn').addEventListener('click', () => {
-        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDone') || '0');
-        localStorage.setItem('pushUpsDone', (pushUpsDone + 10).toString());
+        const button = document.getElementById('regPushUpsBtn');
+        const originalText = button.textContent;
+
+        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNew') || '0');
+        localStorage.setItem('pushUpsDoneNew', (pushUpsDone + 10).toString());
         uploadExercise();
+
+        button.textContent = "ОК";
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 200);
     });
 
     document.getElementById('regAbsBtn').addEventListener('click', () => {
-        const absDone = parseInt(localStorage.getItem('absDone') || '0');
-        localStorage.setItem('absDone', (absDone + 10).toString());
+        const button = document.getElementById('regAbsBtn');
+        const originalText = button.textContent;
+
+        const absDone = parseInt(localStorage.getItem('absDoneNew') || '0');
+        localStorage.setItem('absDoneNew', (absDone + 10).toString());
         uploadExercise();
+
+        button.textContent = "ОК";
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 200);
     })
 
     function getColor(intensity) {
@@ -124,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addCravingBtn').addEventListener('click', () => {
         const currentDay = daysPassed + 1;
         cravings[currentDay] = (cravings[currentDay] || 0) + 1;
-        localStorage.setItem('cravings', JSON.stringify(cravings));
+        localStorage.setItem('cravingsNew', JSON.stringify(cravings));
         location.reload();
     });
 
