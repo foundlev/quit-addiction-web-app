@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculatePushUps(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 100 + 2 * i;
+            result += 30 + 2 * i;
         }
         result -= done;
         if (result < 0) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateAbs(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 50 + 2 * i;
+            result += 30 + 2 * i;
         }
         result -= done;
         if (result < 0) {
