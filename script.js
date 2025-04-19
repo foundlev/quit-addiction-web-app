@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startDate = new Date(Date.UTC(2025, 3, 17, 15, 20, 0));
+    const startDate = new Date(Date.UTC(2025, 3, 19, 8, 44, 0));
     const today = new Date();
     const daysPassedFloat = (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     const daysPassed = Math.floor(daysPassedFloat);
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculatePushUps(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 30 + 2 * i;
+            result += 40 + 2 * i;
         }
         result -= done;
         if (result < 0) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateAbs(daysPassedFloatLocal, done=0) {
         let result = 0;
         for (let i = 1; i <= daysPassedFloatLocal; i++) {
-            result += 30 + 2 * i;
+            result += 40 + 2 * i;
         }
         result -= done;
         if (result < 0) {
