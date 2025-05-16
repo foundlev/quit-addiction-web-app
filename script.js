@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         90: "Большой донат"
     };
 
-    const cravings = JSON.parse(localStorage.getItem('cravingsNeww') || '{}');
+    const cravings = JSON.parse(localStorage.getItem('cravingsNew3') || '{}');
     const daysContainer = document.getElementById('daysContainer');
 
     function calculatePushUps(daysPassedFloatLocal, done=0) {
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function uploadExercise() {
-        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNeww') || '0');
-        const absDone = parseInt(localStorage.getItem('absDoneNeww') || '0');
+        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNew3') || '0');
+        const absDone = parseInt(localStorage.getItem('absDoneNew3') || '0');
 
         const pushUps = calculatePushUps(daysPassedFloat + 1, pushUpsDone);
         const abs = calculateAbs(daysPassedFloat + 1, absDone);
@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = document.getElementById('regPushUpsBtn');
         const originalText = button.textContent;
 
-        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNeww') || '0');
-        localStorage.setItem('pushUpsDoneNeww', (pushUpsDone + 10).toString());
+        const pushUpsDone = parseInt(localStorage.getItem('pushUpsDoneNew3') || '0');
+        localStorage.setItem('pushUpsDoneNew3', (pushUpsDone + 10).toString());
         uploadExercise();
 
         button.textContent = "ОК";
@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = document.getElementById('regAbsBtn');
         const originalText = button.textContent;
 
-        const absDone = parseInt(localStorage.getItem('absDoneNeww') || '0');
-        localStorage.setItem('absDoneNeww', (absDone + 10).toString());
+        const absDone = parseInt(localStorage.getItem('absDoneNew3') || '0');
+        localStorage.setItem('absDoneNew3', (absDone + 10).toString());
         uploadExercise();
 
         button.textContent = "ОК";
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addCravingBtn').addEventListener('click', () => {
         const currentDay = daysPassed + 1;
         cravings[currentDay] = (cravings[currentDay] || 0) + 1;
-        localStorage.setItem('cravingsNeww', JSON.stringify(cravings));
+        localStorage.setItem('cravingsNew3', JSON.stringify(cravings));
         location.reload();
     });
 
