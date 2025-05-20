@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const startDate = new Date(Date.UTC(2025, 4, 16, 22, 33, 0));
+    const startDate = new Date(Date.UTC(2025, 4, 19, 16, 25, 0));
     const today = new Date();
     const daysPassedFloat = (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
     const daysPassed = Math.floor(daysPassedFloat);
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result < 0) {
             result = 0;
         }
-        return result;
+        return 0;
     }
 
     function calculateAbs(daysPassedFloatLocal, done=0) {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result < 0) {
             result = 0;
         }
-        return result;
+        return 0;
     }
 
     function uploadExercise() {
